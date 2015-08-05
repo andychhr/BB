@@ -73,7 +73,8 @@ public class MyFile {
 //            }
 
             String absPath = f.getAbsolutePath();
-            indFiles.put(CN_A_Meta.processStockCodeString(xf.trim()),absPath);
+            //indFiles.put(CN_A_Meta.processStockCodeString(xf.trim()),absPath);
+            indFiles.put(xf.trim(),absPath);
 //            Pattern p = Pattern.compile("\\d{6}");
 //            Matcher m = p.matcher(xf);
 //            if(m.find()){
