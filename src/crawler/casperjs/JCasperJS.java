@@ -17,7 +17,7 @@ import utils.regex.MyRegex;
 import utils.xml.MyXML;
 
 public class JCasperJS {
-	private final String casperJS_ConfigFile = "src/BB/crawler/casperjs/config.xml";
+	private final String casperJS_ConfigFile = "src/crawler/casperjs/config.xml";
 	private String casperJS_templateDir;
 	private String casperJS_instanceDir;
 	
