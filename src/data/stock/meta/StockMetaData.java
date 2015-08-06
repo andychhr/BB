@@ -1,4 +1,4 @@
-package data.stock;
+package data.stock.meta;
 
 import java.util.Date;
 
@@ -20,5 +20,12 @@ public interface StockMetaData {
 	 * @param date
 	 */
 	public void collection(Date date);
+	
+	
+	/****************************************************************************
+	 * 
+	 * data analysis
+	 * 
+	 *****************************************************************************/
 	
 }
