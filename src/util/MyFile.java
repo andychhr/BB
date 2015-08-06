@@ -57,16 +57,18 @@ public class MyFile {
             throw new Exception("it should be a directory, but it is not. detail:"+dirPath);
         }
 
-        String[] chld = fd.list();
-        if(chld == null){
+        String[] childs = fd.list();
+        if(childs == null){
            throw new Exception("Specified directory does not exist or is not a directory.");
         }
-
-        for(String xf : chld){
+        
+        
+        //add all files into hashmap
+        for(String xf : childs){
             File f = new File(dirPath+"\\"+xf);
-            if(!f.exists()){
-                throw new Exception("No such csv file "+xf+" can be found, please double check your input file full location and file name.");
-            }
+//            if(!f.exists()){
+//                throw new Exception("No such csv file "+xf+" can be found, please double check your input file full location and file name.");
+//            }
 
 //            if(!f.isFile() || (!xf.endsWith(".csv") && !xf.endsWith(".CSV"))){
 //                throw new Exception("file: "+xf+" is not a csv file.");
