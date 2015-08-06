@@ -1,6 +1,5 @@
 package util;
 
-public class MyXML extends MyFile {
 
 import java.io.BufferedOutputStream;
 import java.io.File;
