@@ -22,7 +22,7 @@ import org.dom4j.io.XMLWriter;
  * @author hanrchen
  *
  */
-public class MyXML {
+public class MyXML extend MyFile {
 //        public Document createDocument(	) {
 //            Document document = DocumentHelper.createDocument();
 //            Element root = document.addElement( "root" );
@@ -40,17 +40,12 @@ public class MyXML {
 //            return document;
 //        }
 	
-	public static File checkInputXML(String fileName) throws FileSystemException{
-		File xml =  new File(fileName);
-		if(!xml.exists()){
-			throw new FileSystemException("Input xml file "+fileName+" does not exits");
+	public static File validateXML(String fileName) throws FileSystemException{
+		if(MyFile.validateFile(fileName, ".xml")){
+			return new File(fileName);
+		}else{
+			return null;
 		}
-		if(!fileName.contains(".xml") &&
-				!fileName.contains(".XML")){
-			throw new FileSystemException("Input file "+fileName+" does not xml file.");
-		}
-		
-		return xml;
 	}
 
 	/**

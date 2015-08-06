@@ -27,10 +27,6 @@ public class JCasperJS {
 		
 		//instance directory
 		this.casperJS_instanceDir =  MyXML.getValByXpath(this.casperJS_ConfigFile, "/casperjs/temp/directory");
-	
-		
-		
-		
 	}
 	
 	
