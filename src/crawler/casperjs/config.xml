@@ -1,13 +1,16 @@
 <casperjs>
 	<template>
-		<directory>/Users/chenhanrong/baiduyun/百度云同步盘/BeatBear/Crawler/casperjs/template
+		<directory>/Users/chenhanrong/GitHub/BB/src/crawler/casperjs/template
 		</directory>
-		
+
 		<javascripts>
-	<searchGood>SearchGood.js</searchGood>
-	<getCurrentPageLinks>GetCurrentPageLinks.js</getCurrentPageLinks>
-	<getNextPageLinkURL>GetNextPageLinkURL.js</getNextPageLinkURL>
-	<getGoodData>GetGoodData.js</getGoodData></javascripts></template>
+			<searchGood>SearchGood.js</searchGood>
+			<getCurrentPageLinks>GetCurrentPageLinks.js</getCurrentPageLinks>
+			<getNextPageLinkURL>GetNextPageLinkURL.js</getNextPageLinkURL>
+			<getGoodData>GetGoodData.js</getGoodData>
+		</javascripts>
+	</template>
+
 	<temp>
 		<directory>
 			/Volumes/UDisk/data/casperjsInstanceFiles
