@@ -3,9 +3,10 @@ package data.stock;
 import java.util.ArrayList;
 import java.util.Date;
 
-import data.stock.meta.StockMetaData;
+import data.MetaData;
+import data.Analysis;
 
-public class Stock implements StockMetaData {
+public class Stock implements MetaData, Analysis {
 	public String _code;
 	public ArrayList<FinancialStatement> _finStmts;
 	public ArrayList<DailyTrade> _dailyTrades;

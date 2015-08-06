@@ -1,9 +1,8 @@
-package data.stock.meta;
+package data;
 
 import java.util.Date;
 
-public interface StockMetaData {
-	public String _code;
+public interface MetaData {
 	
 	/****************************************************************************
 	 * 
