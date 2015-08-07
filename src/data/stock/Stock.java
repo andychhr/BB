@@ -17,6 +17,7 @@ public class Stock implements MetaData, Analysis {
 		// TODO Auto-generated method stub
 		
 	}
+	
 	@Override
 	public void collection(Date date) {
 		// TODO Auto-generated method stub
