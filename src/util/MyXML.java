@@ -21,7 +21,7 @@ import org.dom4j.io.XMLWriter;
  * @author hanrchen
  *
  */
-public class MyXML extend MyFile {
+public class MyXML extends MyFile {
 //        public Document createDocument(	) {
 //            Document document = DocumentHelper.createDocument();
 //            Element root = document.addElement( "root" );
@@ -39,7 +39,7 @@ public class MyXML extend MyFile {
 //            return document;
 //        }
 	
-	public static File validateXML(String fileName) throws FileSystemException{
+	public static File validateXML(String fileName) throws Exception{
 		if(MyFile.validateFile(fileName, ".xml")){
 			return new File(fileName);
 		}else{

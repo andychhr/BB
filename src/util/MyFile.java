@@ -31,6 +31,53 @@ public class MyFile {
 			throw new Exception("Expected file suffix is : "+suffix + " , but now it is "+filePath+", pls. double check.");
 		}
 		
+		//check if the file can be read
+		if(!f.canRead()){
+			throw new Exception("Expected file : "+filePath + " , can be read, but now it cannot, pls. double check.");
+		}
+		
+		isOk = true;
+		return isOk;
+	}
+	
+	
+	public static boolean validateFile(String filePath) throws Exception{
+		boolean isOk = false;
+		//check file is exists or not
+		File f = new File(filePath);
+		if(!f.exists()){
+			throw new Exception("File: "+filePath + " does not exists, pls. double check.");
+		}
+		
+		//check file is directory or not
+		if(f.isDirectory()){
+			throw new Exception("Expected file: "+filePath + " is a file but now it is a directory, pls. double check.");
+		}
+		
+		//check if the file can be read
+		if(!f.canRead()){
+			throw new Exception("Expected file : "+filePath + " , can be read, but now it cannot, pls. double check.");
+		}
+		
+		isOk = true;
+		return isOk;
+	}
+	
+	
+	public static boolean validateDirectory(String filePath) throws Exception{
+		boolean isOk = false;
+		//check file is exists or not
+		File f = new File(filePath);
+		if(!f.exists()){
+			throw new Exception("File: "+filePath + " does not exists, pls. double check.");
+		}
+		
+		//check file is directory or not
+		if(!f.isDirectory()){
+			throw new Exception("Expected file: "+filePath + " is a directory but now it is not, pls. double check.");
+		}
+		
+		//check if the file can be read
 		if(!f.canRead()){
 			throw new Exception("Expected file : "+filePath + " , can be read, but now it cannot, pls. double check.");
 		}
@@ -66,6 +113,13 @@ public class MyFile {
         //add all files into hashmap
         for(String xf : childs){
             File f = new File(dirPath+"\\"+xf);
+            String absPath = f.getAbsolutePath();
+            indFiles.put(xf.trim(),absPath);
+        }
+
+        return indFiles;
+	 }
+            
 //            if(!f.exists()){
 //                throw new Exception("No such csv file "+xf+" can be found, please double check your input file full location and file name.");
 //            }
@@ -74,18 +128,16 @@ public class MyFile {
 //                throw new Exception("file: "+xf+" is not a csv file.");
 //            }
 
-            String absPath = f.getAbsolutePath();
+           
             //indFiles.put(CN_A_Meta.processStockCodeString(xf.trim()),absPath);
-            indFiles.put(xf.trim(),absPath);
+           
 //            Pattern p = Pattern.compile("\\d{6}");
 //            Matcher m = p.matcher(xf);
 //            if(m.find()){
 //                String xsc = m.group();
 //                indFiles.put(xsc, absPath);
 //            }
-        }
-
-        return indFiles;
-    }
+        
+   
 
 }
