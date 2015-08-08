@@ -2,6 +2,7 @@ package data.stock.finStmt;
 
 import java.io.FileOutputStream;
 import java.util.Date;
+import java.util.HashMap;
 
 import crawler.apache.http.HttpFileCrawler;
 import data.MetaData;
@@ -31,7 +32,7 @@ public class FinancialStatement implements MetaData {
 	}
 	
 	
-	public void collection(String stockcode, String url, FileOutputStream fos) {
+	public HashMap<String, HashMap<String,FileOutputStream>> collection(String stockcode) throws Exception {
 		// TODO Auto-generated method stub
 		HttpFileCrawler.getFile(url, fos);
 	}

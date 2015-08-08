@@ -2,7 +2,8 @@
 	<data>
 		<stock>
 			<!-- stock codes meta data file -->
-			<codeMetaFileURI>~/GitHub/data/stock/metaData</codeMetaFileURI>
+			<codeMetaFileURI>~/GitHub/data/stock/metaData/hsA.txt
+			</codeMetaFileURI>
 
 			<finStmts>
 				<!-- stock financial statements home location -->
@@ -39,19 +40,20 @@
 
 							<!-- 主要财务指标 -->
 							<keyIndexList>
+								<!-- 主要指标 -->
 								<keyIndex>hzycwzb_$sc$.html?type=report</keyIndex>
 								<!-- 盈利能力 -->
 								<profit>
 									zycwzb_$sc$.html?type=report&part=ylnl
-								</profitAblity>
-									<!-- 偿还能力 -->
-									<payback>
-										zycwzb_$sc$.html?type=report&part=chnl
-									</paybackAblity>
-										<!-- 成长能力 -->
-										<growth>zycwzb_$sc$.html?type=report&part=cznl</growth>
-										<!-- 营运能力 -->
-										<operation>zycwzb_$sc$.html?type=report&part=yynl</operation>
+								</profit>
+								<!-- 偿还能力 -->
+								<payback>
+									zycwzb_$sc$.html?type=report&part=chnl
+								</payback>
+								<!-- 成长能力 -->
+								<growth>zycwzb_$sc$.html?type=report&part=cznl</growth>
+								<!-- 营运能力 -->
+								<operation>zycwzb_$sc$.html?type=report&part=yynl</operation>
 							</keyIndexList>
 
 						</finStmts>

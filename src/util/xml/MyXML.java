@@ -59,11 +59,11 @@ public class MyXML extends MyFile {
 	 * @return
 	 * @throws FileSystemException 
 	 */
-	public static ArrayList<String> getValuesByXpath(String fileName, String xpath) throws FileSystemException {
+	public static ArrayList<String> getValuesByXpath(String fileName, String xpath) throws Exception {
 		ArrayList<String> vals = new ArrayList<String>();
 		
 		//check input file
-		File xml = MyXML.checkInputXML(fileName);
+		File xml = MyXML.validateXML(fileName);
 
 		Document document = null;
 		try {
@@ -92,12 +92,12 @@ public class MyXML extends MyFile {
      * @param xpath
      * @return
      */
-	public static String getValByXpath(String fileName, String xpath) throws FileSystemException {
+	public static String getValByXpath(String fileName, String xpath) throws Exception {
 		//return value
 		String xval = "";
 	
 		//check input file
-		File xml = MyXML.checkInputXML(fileName);
+		File xml = MyXML.validateXML(fileName);
 				
 		//
 		Document document = null;
