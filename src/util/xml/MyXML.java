@@ -1,4 +1,4 @@
-package util;
+package util.xml;
 
 
 import java.io.BufferedOutputStream;
@@ -10,12 +10,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+
+
+//dom4j lib
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.Node;
-import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
+
+
+import util.file.MyFile;
 
 /**
  * @author hanrchen

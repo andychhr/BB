@@ -1,0 +1,67 @@
+<BeatBear>
+	<data>
+		<stock>
+			<!-- stock codes meta data file -->
+			<codeMetaFileURI>~/GitHub/data/stock/metaData</codeMetaFileURI>
+
+			<finStmts>
+				<!-- stock financial statements home location -->
+				<finStmtsURI>~/GitHub/data/stock/finStmts</finStmtsURI>
+
+			</finStmts>
+
+			<dailyTrade>
+				<!-- stock daily trade data home location -->
+				<dailyTradeURI><~/GitHub/data/stock/dailyTrade</dailyTradeURI>
+			</dailyTrade>
+
+
+
+			<dataSourceList>
+
+				<currentSource>
+					<name>163</name>
+					<service>
+						http://quotes.money.163.com/service/
+					</service>
+					<resourceList>
+						<finStmts>
+							<!-- three main financial statements -->
+							<!-- 资产负债表 -->
+							<balanceStmt>zcfzb_$sc$.html</balanceStmt>
+							<!-- 利润表 -->
+							<incomeStmt>lrb_$sc$.html</incomeStmt>
+							<!-- 现金流量表 -->
+							<cashFlowStmt>xjllb_$sc$.html</cashFlowStmt>
+
+							<!-- 财务报表摘要 -->
+							<summary>cwbbzy_$sc$.html</summary>
+
+							<!-- 主要财务指标 -->
+							<keyIndexList>
+								<keyIndex>hzycwzb_$sc$.html?type=report</keyIndex>
+								<!-- 盈利能力 -->
+								<profit>
+									zycwzb_$sc$.html?type=report&part=ylnl
+								</profitAblity>
+									<!-- 偿还能力 -->
+									<payback>
+										zycwzb_$sc$.html?type=report&part=chnl
+									</paybackAblity>
+										<!-- 成长能力 -->
+										<growth>zycwzb_$sc$.html?type=report&part=cznl</growth>
+										<!-- 营运能力 -->
+										<operation>zycwzb_$sc$.html?type=report&part=yynl</operation>
+							</keyIndexList>
+
+						</finStmts>
+					</resourceList>
+				</currentSource>
+			</dataSourceList>
+
+
+		</stock>
+
+	</data>
+
+</BeatBear>
