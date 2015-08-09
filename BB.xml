@@ -1,5 +1,7 @@
 <BeatBear>
+	<charset>utf-8</charset>
 	<data>
+		
 		<stock>
 			<!-- stock codes meta data file -->
 			<codeMetaFileURI>~/GitHub/data/stock/metaData/hsA.txt
@@ -7,13 +9,13 @@
 
 			<finStmts>
 				<!-- stock financial statements home location -->
-				<finStmtsURI>~/GitHub/data/stock/finStmts</finStmtsURI>
+				<finStmtStoreURI>~/GitHub/data/stock/finStmts</finStmtStoreURI>
 
 			</finStmts>
 
 			<dailyTrade>
 				<!-- stock daily trade data home location -->
-				<dailyTradeURI><~/GitHub/data/stock/dailyTrade</dailyTradeURI>
+				<dailyTradeURI>~/GitHub/data/stock/dailyTrade</dailyTradeURI>
 			</dailyTrade>
 
 
@@ -43,17 +45,13 @@
 								<!-- 主要指标 -->
 								<keyIndex>hzycwzb_$sc$.html?type=report</keyIndex>
 								<!-- 盈利能力 -->
-								<profit>
-									zycwzb_$sc$.html?type=report&part=ylnl
-								</profit>
+								<profit>zycwzb_$sc$.html?type=report&amp;part=ylnl</profit>
 								<!-- 偿还能力 -->
-								<payback>
-									zycwzb_$sc$.html?type=report&part=chnl
-								</payback>
+								<payback>zycwzb_$sc$.html?type=report&amp;part=chnl</payback>
 								<!-- 成长能力 -->
-								<growth>zycwzb_$sc$.html?type=report&part=cznl</growth>
+								<growth>zycwzb_$sc$.html?type=report&amp;part=cznl</growth>
 								<!-- 营运能力 -->
-								<operation>zycwzb_$sc$.html?type=report&part=yynl</operation>
+								<operation>zycwzb_$sc$.html?type=report&amp;part=yynl</operation>
 							</keyIndexList>
 
 						</finStmts>
