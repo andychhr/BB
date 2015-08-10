@@ -7,16 +7,32 @@ import my.util.xml.MyXML;
 public class MyContext {
 	public static String projectConfigFile = "BB.xml";
 	
+	//============================================
+	//project level config
+	//============================================
 	//project charset
 	public static String Charset;
 	
-	
+	//============================================
+	//stock config
+	//============================================	
 	
 	//stock configs
 	public static String StokCodeMetaFileURI;
 	
 	//stock data source
 	public static String CurrentDataSource;
+	
+	
+	
+	//---------------------------
+	// stock financial statements
+	
+	
+	//
+	public static String STOCK_CODES_NUM_PER_THREAD;	//need conver to int
+	
+	
 	
 	//balanceStmt
 	public static String BalanceStmtURI;
@@ -111,7 +127,8 @@ public class MyContext {
 		MyContext.FinanStmtStoreURI= MyXML.getValByXpath(MyContext.projectConfigFile, "//stock//finStmts//finStmtStoreURI").trim();
 		
 		
-		//Context.
+		//stock//finStmts//MultiThread/StockCodesNumPerThread
+		MyContext.STOCK_CODES_NUM_PER_THREAD =  MyXML.getValByXpath(MyContext.projectConfigFile, "//stock//finStmts//MultiThread/StockCodesNumPerThread").trim();
 	}
 	
 	
@@ -137,7 +154,8 @@ public class MyContext {
 		hmConfigs.put("OperationStmtURI", MyContext.OperationStmtURI);
 		hmConfigs.put("FinanStmtStoreURI", MyContext.FinanStmtStoreURI);
 		
-		
+		//
+		hmConfigs.put("STOCK_CODES_NUM_PER_THREAD", MyContext.STOCK_CODES_NUM_PER_THREAD);
 		//return
 		return hmConfigs;
 		

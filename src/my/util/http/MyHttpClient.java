@@ -1,8 +1,8 @@
 package my.util.http;
 
 
+import my.context.MyContext;
 import my.util.charset.MyCharset;
-import my.util.io.MyInputStream;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -18,11 +18,11 @@ import org.apache.http.util.EntityUtils;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.Charset;
 import java.util.Map;
 
 
 public class MyHttpClient {
+	
 	/**
 	 * @param _host
 	 * @param _path
@@ -59,8 +59,8 @@ public class MyHttpClient {
 	 */
 	public static String basicHttpAccess(String url) throws Exception {
 		RequestConfig config = RequestConfig.custom()
-				.setConnectionRequestTimeout(10 * 30 * 1000) // 30 sec
-				.setConnectTimeout(10 * 30 * 1000) // 30sec
+				.setConnectionRequestTimeout(30 * 1000) // 30 sec
+				.setConnectTimeout(30 * 1000) // 30sec
 				.build();
 		HttpClient httpclient = HttpClientBuilder.create()
 				.setDefaultRequestConfig(config).build();

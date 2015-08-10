@@ -14,7 +14,7 @@ public class HttpFileCrawler implements FileCrawler{
 	 * @return
 	 * @throws Exception
 	 */
-	public static String getFile(String url) throws Exception{
+	public static String getContent(String url) throws Exception{
 		return MyHttpClient.basicHttpAccess(url);
 	}
 }

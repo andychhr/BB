@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 
 import org.apache.commons.io.FileUtils;
@@ -120,8 +121,15 @@ public class MyFile {
 		return isOk;
 	}
 
+	
+	/**
+	 * create File If NotExits
+	 * @param fileAbsPath
+	 * @return
+	 * @throws Exception
+	 */
 	public static File createFileIfNotExits(String fileAbsPath)
-			throws IOException {
+			throws Exception {
 		// check file is exists or not
 		File f = new File(fileAbsPath);
 		synchronized (f) {
@@ -130,19 +138,31 @@ public class MyFile {
 				MyFile.createDirIfNotExists(fdir.getAbsolutePath());
 				// throw new Exception("File: " + fileAbsPath+
 				// " does not exists, pls. double check.");
-				f.createNewFile();
+				if(!f.createNewFile()){
+					throw new Exception("file : "+fileAbsPath+" was not created successfully");
+				}
 			}
 
 			return f;
 		}
 	}
 
-	public static File createDirIfNotExists(String dirAbsPath) {
+	
+	/**
+	 * create Directory If Not Exists
+	 * @param dirAbsPath
+	 * @return
+	 * @throws Exception
+	 */
+	public static File createDirIfNotExists(String dirAbsPath) throws Exception
+	{
 		// check dir is exists or not
 		File f = new File(dirAbsPath);
 		synchronized (f) {
 			if (!f.exists()) {
-				f.mkdirs();
+				if(!f.mkdirs()){
+					throw new Exception("Directory : "+ dirAbsPath + " was not created successfully");
+				}
 			}
 
 			return f;
@@ -203,7 +223,7 @@ public class MyFile {
 	// indFiles.put(xsc, absPath);
 	// }
 
-	public static void WriteOutputStreamToFile(String absFileName, OutputStream os) throws IOException {
+	public static void WriteOutputStreamToFile(String absFileName, OutputStream os) throws Exception {
 		// create file
 		File fi = MyFile.createFileIfNotExits(absFileName);
 
@@ -248,6 +268,16 @@ public class MyFile {
 	public static void WriteStringToFile(File xStmt, String content) throws IOException {
 		// TODO Auto-generated method stub
 		FileUtils.writeStringToFile(xStmt, content);
+	}
+	
+	public static void  WriteStringToFile(File xStmt, String content, Charset encoding, boolean append) throws IOException {
+		// TODO Auto-generated method stub
+		FileUtils.writeStringToFile(xStmt, content, encoding, append);
+	}
+	
+	public static void  WriteStringToFile(String xStmt, String content, Charset encoding, boolean append) throws IOException {
+		// TODO Auto-generated method stub
+		FileUtils.writeStringToFile(new File(xStmt), content, encoding, append);
 	}
 
 }
