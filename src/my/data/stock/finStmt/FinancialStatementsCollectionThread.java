@@ -12,17 +12,24 @@ import my.data.MetaData;
 import my.util.file.MyFile;
 import my.util.thread.MyThread;
 
-public class FinancialStatementsCollectionThread implements MetaData, Runnable {
+public class FinancialStatementsCollectionThread implements Runnable {
 	private String[] _stockcode;
+	private HashMap<String, String> _context;
 	
-	public FinancialStatementsCollectionThread(String ...stockcodes){
-		Util.copyObjects(obj, orb)
+	//constructor
+	public FinancialStatementsCollectionThread(String []stockcodes, HashMap<String, String> context){
+		this._stockcode = stockcodes;
+		this._context = context;
 	}
 	
-	//
-
+	//overide method run
 	@Override
 	public void run() {
+		try {
+			this.collection(this._stockcode);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
 	

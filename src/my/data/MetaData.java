@@ -10,9 +10,10 @@ public interface MetaData {
 	 * 
 	 *****************************************************************************/
 	/**
+	 * @throws Exception 
 	 * 
 	 */
-	public void collection();
+	public void collection() throws Exception;
 	
 	/**
 	 * 
