@@ -11,11 +11,12 @@
 				<!-- stock financial statements home location -->
 				<finStmtStoreURI>/Users/chenhanrong/GitHub/data/stock/finStmts
 				</finStmtStoreURI>
-				
+
 				<!-- multiple thread process -->
 				<MultiThread>
-					<StockCodesNumPerThread>200</StockCodesNumPerThread>
+					<StockCodesNumPerThread>300</StockCodesNumPerThread>
 				</MultiThread>
+				<FinStmtStoreMappingFile>BB/src/my/data/stock/ResourcesMap.xml</FinStmtStoreMappingFile>
 			</finStmts>
 
 			<dailyTrade>

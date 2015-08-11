@@ -32,6 +32,8 @@ public class MyContext {
 	//
 	public static String STOCK_CODES_NUM_PER_THREAD;	//need conver to int
 	
+	//
+	public static String FIN_STMT_STORE_MAPPING_FILE;
 	
 	
 	//balanceStmt
@@ -129,6 +131,10 @@ public class MyContext {
 		
 		//stock//finStmts//MultiThread/StockCodesNumPerThread
 		MyContext.STOCK_CODES_NUM_PER_THREAD =  MyXML.getValByXpath(MyContext.projectConfigFile, "//stock//finStmts//MultiThread/StockCodesNumPerThread").trim();
+		
+		
+		//stock//finStmts//FinStmtStoreMappingFile
+		MyContext.FIN_STMT_STORE_MAPPING_FILE = MyXML.getValByXpath(MyContext.projectConfigFile, "//stock//finStmts//FinStmtStoreMappingFile").trim();
 	}
 	
 	
@@ -156,6 +162,9 @@ public class MyContext {
 		
 		//
 		hmConfigs.put("STOCK_CODES_NUM_PER_THREAD", MyContext.STOCK_CODES_NUM_PER_THREAD);
+		//
+		hmConfigs.put("FIN_STMT_STORE_MAPPING_FILE", MyContext.FIN_STMT_STORE_MAPPING_FILE);
+		
 		//return
 		return hmConfigs;
 		

@@ -2,6 +2,7 @@ package my.data.stock.finStmt;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -76,12 +77,21 @@ public class FinancialStatement implements MetaData {
     }
     
     
+    public static HashMap<String, String> RequestNeedToBeResubmit;
+    public static HashMap<String, String> FailedRequestNeedToBeReviewed;
+    
     
 	@Override
 	/**
 	 * Collect for all stock codes with muti-threads
 	 */
 	public void collection() throws Exception {
+		//
+		FinancialStatement.RequestNeedToBeResubmit = new HashMap<String, String>();
+		FinancialStatement.RequestNeedToBeResubmit.clear();
+		FinancialStatement.FailedRequestNeedToBeReviewed = new HashMap<String, String>();
+		FinancialStatement.FailedRequestNeedToBeReviewed.clear();
+		
 		//get all stock codes
 		if(StockMetaData.STOCK_CODES == null || StockMetaData.STOCK_CODES.length < 2000){
 			StockMetaData.getStockMetaData();
@@ -89,6 +99,18 @@ public class FinancialStatement implements MetaData {
 		
 		//start collections for all stockcodes
 		this.collection(StockMetaData.STOCK_CODES);
+		
+		
+		//resubmit request if any failures
+		if(FinancialStatement.RequestNeedToBeResubmit.size() > 0 ){
+			for(String xurl : FinancialStatement.RequestNeedToBeResubmit.keySet() ){
+				FinancialStatementsCollectionThread.getAndSaveContent(xurl,  FinancialStatement.RequestNeedToBeResubmit.get(xurl));				
+			}
+		}
+		
+		
+		//clear resource
+		FinancialStatement.RequestNeedToBeResubmit = null;
 		
 	}
 	
@@ -134,6 +156,11 @@ public class FinancialStatement implements MetaData {
 		new Thread(xThread).start();	//start thread
 	}
 	
+	
+	
+	
+	
+	
 	//=========================================================================================================
 		
 
@@ -150,6 +177,9 @@ public class FinancialStatement implements MetaData {
 		// TODO Auto-generated method stub
 		
 	}   
+	
+	
+	//=========================================================================================================
     
 	
 
