@@ -1,17 +1,13 @@
 package my.data.stock.finStmt;
 
-import java.io.File;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
-import my.context.MyContext;
-import my.crawler.apache.http.HttpFileCrawler;
+
 import my.data.MetaData;
 import my.data.stock.StockMetaData;
-import my.util.file.MyFile;
+
 
 
 public class FinancialStatement implements MetaData {
@@ -59,7 +55,7 @@ public class FinancialStatement implements MetaData {
 	//for multi thread collection 
 	
 	public static Integer _threadUnitsSize;	//total threads numbers
-	int _threadSize = Integer.parseInt(_context.get("STOCK_CODES_NUM_PER_THREAD"));
+	int _threadSize = 100;
 	
 	
 
@@ -70,7 +66,7 @@ public class FinancialStatement implements MetaData {
         }
     }
 
-    public void removeCompletedThread() {
+    public static void removeCompletedThread() {
         synchronized (FinancialStatement._threadUnitsSize) {
         	FinancialStatement._threadUnitsSize--;
         }
@@ -86,6 +82,8 @@ public class FinancialStatement implements MetaData {
 	 * Collect for all stock codes with muti-threads
 	 */
 	public void collection() throws Exception {
+		
+		
 		//
 		FinancialStatement.RequestNeedToBeResubmit = new HashMap<String, String>();
 		FinancialStatement.RequestNeedToBeResubmit.clear();
@@ -117,6 +115,11 @@ public class FinancialStatement implements MetaData {
 	
 	
 	public void collection(String ...stockcodes) throws InterruptedException {
+		//
+		this._threadSize = Integer.parseInt(this._context.get("STOCK_CODES_NUM_PER_THREAD"));
+		
+		//
+		FinancialStatement._threadUnitsSize = 0;
 		//
 		String[] sub_scs = new String[this._threadSize];
 		for (int i = 0; i < stockcodes.length; i++) {
@@ -154,6 +157,9 @@ public class FinancialStatement implements MetaData {
 	public void luanchThread(String ...sub_scs){
 		FinancialStatementsCollectionThread xThread = new FinancialStatementsCollectionThread(sub_scs,this._context);	//init thread
 		new Thread(xThread).start();	//start thread
+		
+		//
+		FinancialStatement.addNewThread();
 	}
 	
 	

@@ -25,7 +25,8 @@ public class FinancialStatementTest {
 		System.out.println("stock array lenght is "+StockMetaData.STOCK_CODES.length );
 		
 		FinancialStatement fs = new FinancialStatement(configs);
-		fs.collection(StockMetaData.STOCK_CODES);
+		//fs.collection(StockMetaData.STOCK_CODES);
+		fs.collection();
 		
 		
 	}

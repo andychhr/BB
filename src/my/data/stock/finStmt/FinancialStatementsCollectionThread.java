@@ -36,6 +36,41 @@ public class FinancialStatementsCollectionThread implements Runnable {
 		
 	}
 	
+	public String getLocalFinStmtsStoreHomeDir() throws Exception{
+		String LocalFinStmtsStoreHomeDir =  this._context.get("FinanStmtStoreURI").trim();
+		if(MyFile.validateDirectory(LocalFinStmtsStoreHomeDir)){
+			return LocalFinStmtsStoreHomeDir;
+		}else{
+			throw new Exception("this._context.get(\"FinanStmtStoreURI\").trim(); value is null or empty, pls. check this._context has value or not!");
+		}
+	}
+	
+	
+	
+	/**
+	 * 
+	 * @param stockcodes
+	 * @throws Exception
+	 */
+	public void collection(String ...stockcodes) throws Exception{
+		//loop to get statments for each stock
+		for(String sc : stockcodes){
+			if(sc == null){
+				continue;
+			}
+			
+			System.out.println("Debug>>>processing stock code "+sc);
+			try {
+				this.collection(sc);	//collection stock financial statements
+			} catch (Exception e) {
+				e.printStackTrace();
+			}	
+		}
+
+		FinancialStatement.removeCompletedThread();
+	}
+	
+	
 
 	
 	/**
@@ -50,7 +85,7 @@ public class FinancialStatementsCollectionThread implements Runnable {
 //		finStmts.clear();
 		
 		// for financial statements local store home location check
-		String stmtStoreHomeLocation = this._context.get("FinanStmtStoreURI").trim();
+		String stmtStoreHomeLocation = this.getLocalFinStmtsStoreHomeDir();
 		stmtStoreHomeLocation += "/" + stockcode;
 		
 		
@@ -108,28 +143,7 @@ public class FinancialStatementsCollectionThread implements Runnable {
 	
 
 
-	/**
-	 * 
-	 * @param stockcodes
-	 * @throws Exception
-	 */
-	public void collection(String ...stockcodes) throws Exception{
-		//loop to get statments for each stock
-		for(String sc : stockcodes){
-			if(sc == null){
-				continue;
-			}
-			
-			System.out.println("Debug>>>processing stock code "+sc);
-			try {
-				this.collection(sc);	//collection stock financial statements
-			} catch (Exception e) {
-				e.printStackTrace();
-			}	
-		}
 
-
-	}
 	
 	// =========================================================================================================
 	// create Mapping file
@@ -142,14 +156,57 @@ public class FinancialStatementsCollectionThread implements Runnable {
 		if (MyFile.validateFile(MyContext.FIN_STMT_STORE_MAPPING_FILE)) {
 			return new File(MyContext.FIN_STMT_STORE_MAPPING_FILE);
 		} else {
-			return null;
+			throw new Exception("MyContext.FIN_STMT_STORE_MAPPING_FILE is not exists, pls. check if file is there");
 		}
 	}
 	
 	public void writeToMappingFile(File mapFile) throws Exception{
+		//validate map file path is correct
 		if(mapFile!=null && MyXML.validateDirectory(mapFile.getAbsolutePath())){
-			MyXML.writeToFile(doc, outfileName);
+			
+			//get financial statements local store home dir
+			String finStmtsLocalStoreDirPath = this.getLocalFinStmtsStoreHomeDir();
+			
+			//validate this dir
+			if(MyFile.validateDirectory(finStmtsLocalStoreDirPath)){
+				
+				//get docs into org.dom4j.Document object
+				org.dom4j.Document doc = this.getDocList(finStmtsLocalStoreDirPath);
+				
+				//write to map xml file 
+				MyXML.writeToFile(doc, mapFile.getAbsolutePath());
+			}
 		}
+	}
+	
+	
+	public org.dom4j.Document getDocList(String finanStmtsLocalStoreHomeDirPath) throws Exception{
+		//add root element
+		org.dom4j.Document doc = org.dom4j.DocumentHelper.createDocument();
+		org.dom4j.Element root = doc.addElement("FinancialStatements");
+		
+		//add child elements
+		if(MyFile.validateDirectory(finanStmtsLocalStoreHomeDirPath)){
+			File finanStmtsLocalStoreHomeDir = new File(finanStmtsLocalStoreHomeDirPath);
+			
+			//Stock codes' level dirs
+			File[] scDirs = finanStmtsLocalStoreHomeDir.listFiles();	//stock codes' dirs
+			for(File xscDir : scDirs){
+				//ADD element for stock code level
+				org.dom4j.Element e_sc = root.addElement("stockcode")
+						.addAttribute("stockcode", xscDir.getName())
+						.addAttribute("path", xscDir.getAbsolutePath());
+				
+				if(MyFile.validateDirectory(xscDir.getAbsolutePath())){
+					File[] stmtsFiles = xscDir.listFiles();
+					for(File xStmt : stmtsFiles){
+						e_sc.addElement(xStmt.getName()).addText(xStmt.getAbsolutePath());
+					}
+				}
+			}
+		}
+		
+		return doc;
 	}
 	
 	
