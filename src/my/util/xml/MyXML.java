@@ -64,7 +64,7 @@ public class MyXML extends MyFile {
 	 * @return
 	 * @throws FileSystemException 
 	 */
-	public static ArrayList<String> getValuesByXpath(String fileName, String xpath) throws Exception {
+	public static ArrayList<String> getTextsByXpath(String fileName, String xpath) throws Exception {
 		ArrayList<String> vals = new ArrayList<String>();
 		
 		//check input file
@@ -72,9 +72,9 @@ public class MyXML extends MyFile {
 
 		Document document = null;
 		try {
-			SAXReader saxReader = new SAXReader(); // 用来读取xml文档
-			document = saxReader.read(xml); // 读取xml文档
-			List<? extends Node> list = document.selectNodes(xpath);// 用xpath查找节点book的属性
+			SAXReader saxReader = new SAXReader(); // 
+			document = saxReader.read(xml); // 
+			List<? extends Node> list = document.selectNodes(xpath);// 
 			Iterator<?> iter = list.iterator();
 			while (iter.hasNext()) {
 				Element xel = (Element) iter.next();
@@ -97,7 +97,7 @@ public class MyXML extends MyFile {
      * @param xpath
      * @return
      */
-	public static String getValByXpath(String fileName, String xpath) throws Exception {
+	public static String getTextByXpath(String fileName, String xpath) throws Exception {
 		//return value
 		String xval = "";
 	
@@ -107,9 +107,9 @@ public class MyXML extends MyFile {
 		//
 		Document document = null;
 		try {
-			SAXReader saxReader = new SAXReader(); // 用来读取xml文档
-			document = saxReader.read(xml); // 读取xml文档
-			List<? extends Node> list = document.selectNodes(xpath);// 用xpath查找节点book的属性
+			SAXReader saxReader = new SAXReader(); // 
+			document = saxReader.read(xml); // 
+			List<? extends Node> list = document.selectNodes(xpath);// 
 			Iterator<?> iter = list.iterator();
 			while (iter.hasNext()) {
 				Element xel = (Element) iter.next();
@@ -124,6 +124,49 @@ public class MyXML extends MyFile {
 		return xval;
 	}
 
+	
+	
+	
+	/**
+	 * 
+	 * @param fileName
+	 * @param xpath
+	 * @return
+	 * @throws FileSystemException 
+	 */
+	public static ArrayList<String> getAttributesByXpath(String fileName, String xpath, String attributeName) throws Exception {
+		ArrayList<String> vals = new ArrayList<String>();
+		
+		//check input file
+		File xml = MyXML.validateXML(fileName);
+
+		Document document = null;
+		try {
+			SAXReader saxReader = new SAXReader(); // 
+			document = saxReader.read(xml); // 
+			List<? extends Node> list = document.selectNodes(xpath);	//get node by xpath 
+			Iterator<?> iter = list.iterator();
+			while (iter.hasNext()) {	// loop to get all elements' attribute
+				Element xel = (Element) iter.next();
+				String xAttrVal = xel.attributeValue(attributeName);
+				if(xAttrVal == null){
+					throw new Exception("Element : "+ xpath+" cannot find attribute: "+attributeName);
+				}
+				vals.add(xAttrVal);
+			}
+			
+			//clear resource
+			list = null;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			document = null;
+		}
+
+		return vals;
+	}
+	
+	
 	
 	
 	/**

@@ -23,10 +23,10 @@ public class JCasperJS {
 	
 	public JCasperJS() throws FileSystemException{
 		//tempalte directory
-		this.casperJS_templateDir = MyXML.getValByXpath(this.casperJS_ConfigFile, "/casperjs/template/directory");
+		this.casperJS_templateDir = MyXML.getTextByXpath(this.casperJS_ConfigFile, "/casperjs/template/directory");
 		
 		//instance directory
-		this.casperJS_instanceDir =  MyXML.getValByXpath(this.casperJS_ConfigFile, "/casperjs/temp/directory");
+		this.casperJS_instanceDir =  MyXML.getTextByXpath(this.casperJS_ConfigFile, "/casperjs/temp/directory");
 	}
 	
 	
@@ -64,7 +64,7 @@ public class JCasperJS {
 		params.put("itemName", searchItemName);
 		
 		try {
-			String searchGoodJS =  MyXML.getValByXpath(this.casperJS_ConfigFile, "/casperjs/template/javascripts/searchGood");
+			String searchGoodJS =  MyXML.getTextByXpath(this.casperJS_ConfigFile, "/casperjs/template/javascripts/searchGood");
 			
 			String templateFile = this.casperJS_templateDir + "/"+ searchGoodJS;
 			String instanceStr = this.getInstanceFile(templateFile, params);

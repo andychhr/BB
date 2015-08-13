@@ -81,60 +81,60 @@ public class MyContext {
 		/********************************
 		 * for whole project
 		 *********************************/
-		MyContext.Charset = MyXML.getValByXpath(MyContext.projectConfigFile, "/BeatBear/charset").trim();
+		MyContext.Charset = MyXML.getTextByXpath(MyContext.projectConfigFile, "/BeatBear/charset").trim();
 		
 		/********************************
 		 * for meta data
 		 *********************************/
 		//load config file content
-		MyContext.StokCodeMetaFileURI = MyXML.getValByXpath(MyContext.projectConfigFile, "//stock/codeMetaFileURI").trim();
+		MyContext.StokCodeMetaFileURI = MyXML.getTextByXpath(MyContext.projectConfigFile, "//stock/codeMetaFileURI").trim();
 		
 		/********************************
 		 * for crawler
 		 *********************************/
 		//currentSource/service
-		MyContext.CurrentDataSource = MyXML.getValByXpath(MyContext.projectConfigFile, "//dataSourceList/currentSource/service").trim();
+		MyContext.CurrentDataSource = MyXML.getTextByXpath(MyContext.projectConfigFile, "//dataSourceList/currentSource/service").trim();
 		
 		/********************************
 		 * for financial statments
 		 *********************************/
 		//currentSource//finStmts/balanceStmt
-		MyContext.BalanceStmtURI = MyXML.getValByXpath(MyContext.projectConfigFile, "//currentSource//finStmts/balanceStmt").trim();
+		MyContext.BalanceStmtURI = MyXML.getTextByXpath(MyContext.projectConfigFile, "//currentSource//finStmts/balanceStmt").trim();
 		
 		//currentSource//finStmts/incomeStmt
-		MyContext.IncomeStmtURI = MyXML.getValByXpath(MyContext.projectConfigFile, "//currentSource//finStmts/incomeStmt").trim();
+		MyContext.IncomeStmtURI = MyXML.getTextByXpath(MyContext.projectConfigFile, "//currentSource//finStmts/incomeStmt").trim();
 		
 		//currentSource//finStmts/cashFlowStmt
-		MyContext.CashFlowStmtURI = MyXML.getValByXpath(MyContext.projectConfigFile, "//currentSource//finStmts/cashFlowStmt").trim();
+		MyContext.CashFlowStmtURI = MyXML.getTextByXpath(MyContext.projectConfigFile, "//currentSource//finStmts/cashFlowStmt").trim();
 		
 		//currentSource//finStmts//summary
-		MyContext.SummayStmtURI = MyXML.getValByXpath(MyContext.projectConfigFile, "//currentSource//finStmts//summary").trim();
+		MyContext.SummayStmtURI = MyXML.getTextByXpath(MyContext.projectConfigFile, "//currentSource//finStmts//summary").trim();
 		
 		//currentSource//finStmts//keyIndex
-		MyContext.KeyIndexStmtURI = MyXML.getValByXpath(MyContext.projectConfigFile, "//currentSource//finStmts//keyIndex").trim();
+		MyContext.KeyIndexStmtURI = MyXML.getTextByXpath(MyContext.projectConfigFile, "//currentSource//finStmts//keyIndex").trim();
 		
 		//currentSource//finStmts//profit
-		MyContext.ProfitStmtURI= MyXML.getValByXpath(MyContext.projectConfigFile, "//currentSource//finStmts//profit").trim();
+		MyContext.ProfitStmtURI= MyXML.getTextByXpath(MyContext.projectConfigFile, "//currentSource//finStmts//profit").trim();
 		
 		//currentSource//finStmts//payback
-		MyContext.PaybackStmtURI= MyXML.getValByXpath(MyContext.projectConfigFile, "//currentSource//finStmts//payback").trim();
+		MyContext.PaybackStmtURI= MyXML.getTextByXpath(MyContext.projectConfigFile, "//currentSource//finStmts//payback").trim();
 		
 		//currentSource//finStmts//growth
-		MyContext.GrowthStmtURI= MyXML.getValByXpath(MyContext.projectConfigFile, "//currentSource//finStmts//growth").trim();
+		MyContext.GrowthStmtURI= MyXML.getTextByXpath(MyContext.projectConfigFile, "//currentSource//finStmts//growth").trim();
 		
 		//currentSource//finStmts//operation
-		MyContext.OperationStmtURI= MyXML.getValByXpath(MyContext.projectConfigFile, "//currentSource//finStmts//operation").trim();
+		MyContext.OperationStmtURI= MyXML.getTextByXpath(MyContext.projectConfigFile, "//currentSource//finStmts//operation").trim();
 		
 		//stock//finStmts//finStmtStoreURI
-		MyContext.FinanStmtStoreURI= MyXML.getValByXpath(MyContext.projectConfigFile, "//stock//finStmts//finStmtStoreURI").trim();
+		MyContext.FinanStmtStoreURI= MyXML.getTextByXpath(MyContext.projectConfigFile, "//stock//finStmts//finStmtStoreURI").trim();
 		
 		
 		//stock//finStmts//MultiThread/StockCodesNumPerThread
-		MyContext.STOCK_CODES_NUM_PER_THREAD =  MyXML.getValByXpath(MyContext.projectConfigFile, "//stock//finStmts//MultiThread/StockCodesNumPerThread").trim();
+		MyContext.STOCK_CODES_NUM_PER_THREAD =  MyXML.getTextByXpath(MyContext.projectConfigFile, "//stock//finStmts//MultiThread/StockCodesNumPerThread").trim();
 		
 		
 		//stock//finStmts//FinStmtStoreMappingFile
-		MyContext.FIN_STMT_STORE_MAPPING_FILE = MyXML.getValByXpath(MyContext.projectConfigFile, "//stock//finStmts//FinStmtStoreMappingFile").trim();
+		MyContext.FIN_STMT_STORE_MAPPING_FILE = MyXML.getTextByXpath(MyContext.projectConfigFile, "//stock//finStmts//FinStmtStoreMappingFile").trim();
 	}
 	
 	
