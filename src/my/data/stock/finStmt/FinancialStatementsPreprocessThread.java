@@ -56,7 +56,7 @@ public class FinancialStatementsPreprocessThread implements Runnable{
 
         //--------------------------------
         //create file
-        String f = "src/main/java/mm/data/mining/preprocess/FinancialStatement/FinancialStatementFieldsMap.java";
+        String f = "src/my/data/stock/finanStmt/FinancialStatementFieldsMap.java";
 //        H:\baiduyun\workspace\0.MyProject\code\IdeaProjects\MM\src\main\java\mm\data\mining\preprocess\FinancialStatement\FinancialStatementFieldsMap.java
 //        File fx = new File("src/mm/data/mining/stock/meta/FieldsMap.java");
         File fx = new File(f);
