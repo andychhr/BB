@@ -19,7 +19,7 @@ public class FinancialStatementTest {
 		}
 
 		if(StockMetaData.STOCK_CODES == null || StockMetaData.STOCK_CODES.length < 2000){
-			StockMetaData.getStockMetaData();
+			StockMetaData.getInstance();
 		}
 		
 		System.out.println("stock array lenght is "+StockMetaData.STOCK_CODES.length );

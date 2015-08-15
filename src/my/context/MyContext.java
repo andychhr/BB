@@ -29,7 +29,7 @@ public class MyContext {
 	// project config file
 	// ============================================
 
-	public static String projectConfigFile = "BB.xml";
+	public static String projectConfigFile = "./BB.xml";
 	
 	//============================================
 	//project level config

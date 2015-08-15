@@ -16,11 +16,30 @@ public class StockMetaData {
 	public static HashMap<String, String> STOCK_NAMES;
 	public static HashMap<String, String> STOCK_META_DATA;
 	
-	public static void getStockMetaData() throws Exception{
+	
+	//------------------------------------------------------
+	
+	private final static StockMetaData instance = new StockMetaData();
+	private static boolean initialized = false;
+	
+	private StockMetaData(){
+		
+	}
+	
+	public static synchronized StockMetaData getInstance() throws Exception {
+	    if (initialized) return instance;
+	    instance.init();
+	    initialized = true;
+	    return instance;
+	  }
+	
+	//-----------------------------------------------------
+	
+	private void init() throws Exception{
 		if (MyContext.StokCodeMetaFileURI.isEmpty()
 				|| MyContext.StokCodeMetaFileURI == null) {
 			//set context
-			MyContext.setContext();
+			MyContext.getInstance();
 
 		}
 		
