@@ -5,6 +5,30 @@ import java.util.HashMap;
 import my.util.xml.MyXML;
 
 public class MyContext {
+	
+	private final static MyContext instance = new MyContext();
+	private static boolean initialized = false;
+	
+	private MyContext(){
+		
+	}
+	
+	
+	private void init() throws Exception{
+		setContext();
+	}
+	
+	public static synchronized MyContext getInstance() throws Exception {
+	    if (initialized) return instance;
+	    instance.init();
+	    initialized = true;
+	    return instance;
+	  }
+	
+	// ============================================
+	// project config file
+	// ============================================
+
 	public static String projectConfigFile = "BB.xml";
 	
 	//============================================
@@ -74,7 +98,7 @@ public class MyContext {
 	 * 
 	 * @throws Exception
 	 */
-	public static void setContext() throws Exception{
+	 private static void setContext() throws Exception{
 		//check config file
 		MyXML.validateXML(MyContext.projectConfigFile);
 
@@ -167,7 +191,7 @@ public class MyContext {
 		
 		//return
 		return hmConfigs;
+	}
 		
 		
 	}
-}
