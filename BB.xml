@@ -4,24 +4,22 @@
 
 		<stock>
 			<!-- stock codes meta data file -->
-			<codeMetaFileURI>/Users/chenhanrong/GitHub/data/stock/metaData/hsA.txt
-			</codeMetaFileURI>
+			<codeMetaFileURI>/data/stock/metaData/hsA.txt</codeMetaFileURI>
 
 			<finStmts>
 				<!-- stock financial statements home location -->
-				<finStmtStoreURI>/Users/chenhanrong/GitHub/data/stock/finStmts
-				</finStmtStoreURI>
+				<finStmtStoreURI>/data/stock/finStmts</finStmtStoreURI>
 
 				<!-- multiple thread process -->
 				<MultiThread>
 					<StockCodesNumPerThread>300</StockCodesNumPerThread>
 				</MultiThread>
-				<FinStmtStoreMappingFile>BB/src/my/data/stock/ResourcesMap.xml</FinStmtStoreMappingFile>
+				<FinStmtStoreMappingFile>/BB/src/my/data/stock/ResourcesMap.xml</FinStmtStoreMappingFile>
 			</finStmts>
 
 			<dailyTrade>
 				<!-- stock daily trade data home location -->
-				<dailyTradeURI>/Users/chenhanrong/GitHub/data/stock/dailyTrade
+				<dailyTradeURI>/data/stock/dailyTrade
 				</dailyTradeURI>
 			</dailyTrade>
 

@@ -10,11 +10,18 @@ import org.apache.commons.io.FileUtils;
 
 import my.context.MyContext;
 
+
+
+
+
 public class StockMetaData {
 	
 	public static String[] STOCK_CODES;
 	public static HashMap<String, String> STOCK_NAMES;
 	public static HashMap<String, String> STOCK_META_DATA;
+	
+	
+	private MyContext _context;
 	
 	
 	//------------------------------------------------------
@@ -36,12 +43,15 @@ public class StockMetaData {
 	//-----------------------------------------------------
 	
 	private void init() throws Exception{
-		if (MyContext.StokCodeMetaFileURI.isEmpty()
-				|| MyContext.StokCodeMetaFileURI == null) {
-			//set context
-			MyContext.getInstance();
-
-		}
+		
+		//set context
+		this._context = MyContext.getInstance();
+		
+		
+		System.out.println(MyContext.StokCodeMetaFileURI);
+		File xf = new File(MyContext.StokCodeMetaFileURI);
+		String absPath =  xf.getAbsolutePath();
+		System.out.println(absPath);
 		
 		//read file into string
 		File f = new File(MyContext.StokCodeMetaFileURI);

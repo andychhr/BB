@@ -1,8 +1,12 @@
 package my.context;
 
 import java.util.HashMap;
+import java.io.File;
+
 
 import my.util.xml.MyXML;
+
+
 
 public class MyContext {
 	
@@ -30,6 +34,10 @@ public class MyContext {
 	// ============================================
 
 	public static String projectConfigFile = "./BB.xml";
+	
+	public static String WORKSAPCE_DIR;
+	public static String DATA_DIR;
+	
 	
 	//============================================
 	//project level config
@@ -99,6 +107,7 @@ public class MyContext {
 	 * @throws Exception
 	 */
 	 private static void setContext() throws Exception{
+		
 		//check config file
 		MyXML.validateXML(MyContext.projectConfigFile);
 
@@ -106,6 +115,10 @@ public class MyContext {
 		 * for whole project
 		 *********************************/
 		MyContext.Charset = MyXML.getTextByXpath(MyContext.projectConfigFile, "/BeatBear/charset").trim();
+		
+		MyContext.WORKSAPCE_DIR = (new File("")).getAbsolutePath();
+		MyContext.DATA_DIR = WORKSAPCE_DIR+"/data/";
+		
 		
 		/********************************
 		 * for meta data
@@ -192,6 +205,6 @@ public class MyContext {
 		//return
 		return hmConfigs;
 	}
-		
+	
 		
 	}
