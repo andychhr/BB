@@ -15,14 +15,15 @@ public class FinancialStatementTest {
 	public void testCollectionString() throws Exception {
 		HashMap<String, String> configs = new HashMap<String, String>();
 		if(MyContext.StokCodeMetaFileURI==null ||MyContext.StokCodeMetaFileURI.isEmpty() ){
+			MyContext.getInstance();
 			configs = MyContext.getStockContext();
 		}
 
-		if(StockMetaData.STOCK_CODES == null || StockMetaData.STOCK_CODES.length < 2000){
+		if(StockMetaData.getStockCodes() == null || StockMetaData.getStockCodes().length < 2000){
 			StockMetaData.getInstance();
 		}
 		
-		System.out.println("stock array lenght is "+StockMetaData.STOCK_CODES.length );
+		System.out.println("stock array lenght is "+StockMetaData.getStockCodes().length );
 		
 		FinancialStatement fs = new FinancialStatement(configs);
 		//fs.collection(StockMetaData.STOCK_CODES);

@@ -19,8 +19,7 @@
 
 			<dailyTrade>
 				<!-- stock daily trade data home location -->
-				<dailyTradeURI>/data/stock/dailyTrade
-				</dailyTradeURI>
+				<dailyTradeURI>/data/stock/dailyTrade</dailyTradeURI>
 			</dailyTrade>
 
 

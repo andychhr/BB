@@ -16,9 +16,9 @@ import my.context.MyContext;
 
 public class StockMetaData {
 	
-	public static String[] STOCK_CODES;
-	public static HashMap<String, String> STOCK_NAMES;
-	public static HashMap<String, String> STOCK_META_DATA;
+	private static String[] STOCK_CODES;
+	private static HashMap<String, String> STOCK_NAMES;
+	private static HashMap<String, String> STOCK_META_DATA;
 	
 	
 	private MyContext _context;
@@ -46,12 +46,7 @@ public class StockMetaData {
 		
 		//set context
 		this._context = MyContext.getInstance();
-		
-		
-		System.out.println(MyContext.StokCodeMetaFileURI);
-		File xf = new File(MyContext.StokCodeMetaFileURI);
-		String absPath =  xf.getAbsolutePath();
-		System.out.println(absPath);
+	
 		
 		//read file into string
 		File f = new File(MyContext.StokCodeMetaFileURI);
@@ -66,6 +61,7 @@ public class StockMetaData {
 			for(int i=1;i<rows.length;i++){	//start from row 2 since row 1 is header row
 				String xRow = rows[i].trim();	// get row 
 				String fields[] = xRow.trim().split("\t");
+				//String scStr = String.copyValueOf(fields[0].trim().toCharArray());
 				String scStr = fields[0].trim();
 				if(StockMetaData.validateStockCode(scStr)){	//string is a validate stock code 
 					StockMetaData.STOCK_CODES[i-1] = fields[0].trim();	//set stockcode
@@ -74,7 +70,16 @@ public class StockMetaData {
 				}else{
 					continue;	//string is not a stock code, then continue;
 				}
+				
+				//clear resource
+				fields=null;
+				xRow = null;
 			}
+			
+			//clear resource
+			rows = null;
+			content = null;
+
 		}
 	}
 	
@@ -95,6 +100,20 @@ public class StockMetaData {
 		
 	}
 	
+	
+	
+	
+	public static String[] getStockCodes(){
+		return STOCK_CODES;
+	}
+	
+	public static HashMap<String, String> getStockNames(){
+		return STOCK_NAMES;
+	}
+	
+	public static HashMap<String, String> getStockMetaData(){
+		return STOCK_META_DATA;
+	}
 	
 	
 	

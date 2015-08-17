@@ -32,6 +32,14 @@ public class FinancialStatement implements MetaData, Analysis {
 	// Contructors
 	// =========================================================================================================
 	
+	public FinancialStatement() throws Exception{
+		FinancialStatement._context = new HashMap<String, String>();
+		FinancialStatement._context.clear();
+		
+		MyContext.getInstance();
+		FinancialStatement._context = MyContext.getStockContext();
+	}
+	
 	/**
 	 * for all stock codes' financial statements
 	 * @param context
@@ -134,12 +142,12 @@ public class FinancialStatement implements MetaData, Analysis {
 		FinancialStatement.FailedRequestNeedToBeReviewed.clear();
 		
 		//get all stock codes
-		if(StockMetaData.STOCK_CODES == null || StockMetaData.STOCK_CODES.length < 2000){
+		if(StockMetaData.getStockCodes() == null || StockMetaData.getStockCodes().length < 2000){
 			StockMetaData.getStockMetaData();
 		}
 		
 		//start collections for all stockcodes
-		this.collection(StockMetaData.STOCK_CODES);
+		this.collection(StockMetaData.getStockCodes());
 		
 		
 		//resubmit request if any failures
@@ -235,7 +243,7 @@ public class FinancialStatement implements MetaData, Analysis {
 	// =========================================================================================================
 	public File getMappingFile() throws Exception{
 		if(MyContext.FIN_STMT_STORE_MAPPING_FILE == null || MyContext.FIN_STMT_STORE_MAPPING_FILE.isEmpty()){
-			MyContext.setContext();
+			MyContext.getInstance();
 		}
 
 		if (MyFile.validateFile(MyContext.FIN_STMT_STORE_MAPPING_FILE)) {

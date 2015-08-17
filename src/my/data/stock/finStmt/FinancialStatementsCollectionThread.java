@@ -2,22 +2,24 @@ package my.data.stock.finStmt;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.HashMap;
-
 
 import my.context.MyContext;
 import my.crawler.apache.http.HttpFileCrawler;
+import my.data.stock.StockDataCollectionThread;
 import my.util.file.MyFile;
 
 
-public class FinancialStatementsCollectionThread implements Runnable {
-	private String[] _stockcode;
-	private HashMap<String, String> _context;
+public class FinancialStatementsCollectionThread extends StockDataCollectionThread {
+//	private String[] _stockcode;
+//	private HashMap<String, String> _context;
 	
 	//constructor
-	public FinancialStatementsCollectionThread(String []stockcodes, HashMap<String, String> context){
-		this._stockcode = stockcodes;
-		this._context = context;
+	public FinancialStatementsCollectionThread(String []stockcodes, HashMap<String, String> context, String storeHomeDirContextName){
+		super(stockcodes, context, storeHomeDirContextName);
+//		this._stockcode = stockcodes;
+//		this._context = context;
 	}
 	
 	//overide method run
@@ -93,6 +95,25 @@ public class FinancialStatementsCollectionThread implements Runnable {
 	}
 	
 	
+	public void collection(String stockcode,String stmtStoreHomeLocation, HashMap<String, String> urls_fileName) throws Exception {
+		//String dataSourceService = this._context.get("CurrentDataSource");	//get template URLs
+		for (String xURL : urls_fileName.keySet()) {
+			//
+			System.out.println("xURL for stockcode:" + stockcode + " is "+ xURL);
+
+			// get local file absolute path
+			String xStmtLocalFilePath = urls_fileName.get(xURL);
+					//stmtStoreHomeLocation + "/"+ this.getStmtName(xURL) + ".csv"; // get file abs location
+
+			// get content via http and save file into local files
+			FinancialStatementsCollectionThread.getAndSaveContent(xURL,xStmtLocalFilePath);
+
+		}	
+	}
+	
+	
+	
+	
 	public static void getAndSaveContent(String url, String localFilePath){
 		String content = "";
 		//crawl content from web
@@ -138,6 +159,19 @@ public class FinancialStatementsCollectionThread implements Runnable {
 	public String getStmtName(String oriStmtName) {
 		int x = oriStmtName.indexOf("Stmt");
 		return oriStmtName.substring(0, x);
+	}
+
+	@Override
+	public HashMap<String, ArrayList<String>> getURLs(String[] stockcodes) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HashMap<String, String> getLocalStoreFiles(
+			HashMap<String, ArrayList<String>> sc_urls) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
