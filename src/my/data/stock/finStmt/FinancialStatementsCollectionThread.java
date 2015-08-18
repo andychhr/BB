@@ -22,24 +22,47 @@ public class FinancialStatementsCollectionThread extends StockDataCollectionThre
 //		this._context = context;
 	}
 	
-	//overide method run
-	@Override
-	public void run() {
-		try {
-			this.collection(this._stockcode);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-	}
+	
+	
+	
 	
 
+	@Override
+	public HashMap<String, ArrayList<String>> getURLs(String[] stockcodes) {
+		
+		String dataSourceService = this._context.get("CurrentDataSource");	//get template URLs
+		for(String key : this._context.keySet()){
+			if(key.contains("StmtURI")){
+				String xStmtURI = this._context.get(key);	//get x statement URIs
+				xStmtURI=xStmtURI.replace("$sc$", stockcode).trim();	//replace "$sc$" to real stock code
+				String xURL = dataSourceService + xStmtURI;	// get real statement url
+				System.out.println("xURL for stockcode:"+stockcode + "is " + xURL);
+				
+				//get local file absolute path
+				String xStmtLocalFilePath = this._localStoreHomeDir + "/" + this.getStmtName(key) + ".csv"; // get file abs location
+				
+				//get content via http and save file into local files
+				FinancialStatementsCollectionThread.getAndSaveContent(xURL, xStmtLocalFilePath);
+			}
+		}	
+	}
+
+	@Override
+	public HashMap<String, String> getLocalStoreFiles(
+			HashMap<String, ArrayList<String>> sc_urls) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
-	/**
+
+	/*
+
+	//**
 	 * 
 	 * @param stockcodes
 	 * @throws Exception
-	 */
+	 *//*
 	public void collection(String ...stockcodes) throws Exception{
 		//loop to get statments for each stock
 		for(String sc : stockcodes){
@@ -61,12 +84,12 @@ public class FinancialStatementsCollectionThread extends StockDataCollectionThre
 	
 
 	
-	/**
+	*//**
 	 * Stock financial statement for each stok 
 	 * @param stockcode
 	 * @return
 	 * @throws Exception
-	 */
+	 *//*
 	public void collection(String stockcode) throws Exception {
 		//
 //		HashMap<String, File> finStmts = new HashMap<String, File>();
@@ -149,7 +172,7 @@ public class FinancialStatementsCollectionThread extends StockDataCollectionThre
 	
 	
 
-
+*/
 
 	
 	
@@ -159,19 +182,6 @@ public class FinancialStatementsCollectionThread extends StockDataCollectionThre
 	public String getStmtName(String oriStmtName) {
 		int x = oriStmtName.indexOf("Stmt");
 		return oriStmtName.substring(0, x);
-	}
-
-	@Override
-	public HashMap<String, ArrayList<String>> getURLs(String[] stockcodes) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public HashMap<String, String> getLocalStoreFiles(
-			HashMap<String, ArrayList<String>> sc_urls) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
