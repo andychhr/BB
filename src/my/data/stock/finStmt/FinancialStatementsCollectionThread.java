@@ -4,6 +4,7 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import my.context.MyContext;
 import my.crawler.apache.http.HttpFileCrawler;
@@ -15,12 +16,52 @@ public class FinancialStatementsCollectionThread extends StockDataCollectionThre
 //	private String[] _stockcode;
 //	private HashMap<String, String> _context;
 	
+	private String _dataSourceService;
+	
+	
+	
+	
 	//constructor
 	public FinancialStatementsCollectionThread(String []stockcodes, HashMap<String, String> context, String storeHomeDirContextName){
 		super(stockcodes, context, storeHomeDirContextName);
 //		this._stockcode = stockcodes;
 //		this._context = context;
+		
+		this._dataSourceService = this._context.get("CurrentDataSource");
 	}
+	
+
+	@Override
+	protected void setRequestNeedToBeResubmit(
+			) {
+		// TODO Auto-generated method stub
+		RequestNeedToBeResubmit
+	}
+
+
+
+
+
+
+	@Override
+	protected void setFailedRequestNeedToBeReviewed(
+			Map<String, String> FailedRequestNeedToBeReviewed) {
+		super._FailedRequestNeedToBeReviewed = 
+		
+	}
+
+
+
+
+
+
+	@Override
+	protected Map<String, String> getURL_File(String stockcode) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
 	
 	
 	
@@ -28,19 +69,23 @@ public class FinancialStatementsCollectionThread extends StockDataCollectionThre
 	
 
 	@Override
-	public HashMap<String, ArrayList<String>> getURLs(String[] stockcodes) {
+	protected Map<String,String> getURLs(String stockcode) {
+		//
+		Map url_file = new HashMap<String,String>();
+		url_file.clear();
 		
-		String dataSourceService = this._context.get("CurrentDataSource");	//get template URLs
+		//get template URLs
 		for(String key : this._context.keySet()){
 			if(key.contains("StmtURI")){
 				String xStmtURI = this._context.get(key);	//get x statement URIs
 				xStmtURI=xStmtURI.replace("$sc$", stockcode).trim();	//replace "$sc$" to real stock code
-				String xURL = dataSourceService + xStmtURI;	// get real statement url
+				String xURL = this._dataSourceService + xStmtURI;	// get real statement url
 				System.out.println("xURL for stockcode:"+stockcode + "is " + xURL);
 				
 				//get local file absolute path
 				String xStmtLocalFilePath = this._localStoreHomeDir + "/" + this.getStmtName(key) + ".csv"; // get file abs location
 				
+				url_file.put(xURL, xStmtLocalFilePath);
 				//get content via http and save file into local files
 				FinancialStatementsCollectionThread.getAndSaveContent(xURL, xStmtLocalFilePath);
 			}
@@ -183,5 +228,11 @@ public class FinancialStatementsCollectionThread extends StockDataCollectionThre
 		int x = oriStmtName.indexOf("Stmt");
 		return oriStmtName.substring(0, x);
 	}
+
+
+
+
+
+
 
 }
