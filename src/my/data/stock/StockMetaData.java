@@ -16,22 +16,27 @@ import my.context.MyContext;
 
 public class StockMetaData {
 	
-	private static String[] STOCK_CODES;
-	private static HashMap<String, String> STOCK_NAMES;
-	private static HashMap<String, String> STOCK_META_DATA;
+	protected static String[] STOCK_CODES;
+	protected static HashMap<String, String> STOCK_NAMES;
+	protected static HashMap<String, String> STOCK_META_DATA;
 	
+	//protected static MyContext STOCK_CONTEXT;
 	
-	private MyContext _context;
+	protected String DEFAULT_STORE_HOME_DIR;
 	
 	
 	//------------------------------------------------------
 	
-	private final static StockMetaData instance = new StockMetaData();
+	protected final static StockMetaData instance = new StockMetaData();
 	private static boolean initialized = false;
 	
-	private StockMetaData(){
+	
+	
+	protected StockMetaData(){
 		
 	}
+	
+	
 	
 	public static synchronized StockMetaData getInstance() throws Exception {
 	    if (initialized) return instance;
@@ -42,11 +47,20 @@ public class StockMetaData {
 	
 	//-----------------------------------------------------
 	
+	
+	
 	private void init() throws Exception{
 		
 		//set context
-		this._context = MyContext.getInstance();
+		MyContext.getInstance();
 	
+		this.getStockCoreData();
+	}
+	
+	
+	
+	
+	private void getStockCoreData() throws Exception{
 		
 		//read file into string
 		File f = new File(MyContext.StokCodeMetaFileURI);
@@ -84,12 +98,14 @@ public class StockMetaData {
 	}
 	
 	
+	
+	
 	/**
 	 * Check if the sting is a stock code, string is a validate stock code
 	 * @param scStr
 	 * @return
 	 */
-	public static boolean validateStockCode(String scStr){
+ 	public static boolean validateStockCode(String scStr){
 		Pattern p = Pattern.compile("\\d{6}");	// 6 digitals
 		Matcher m = p.matcher(scStr);
 		if(m.find()){
@@ -107,12 +123,35 @@ public class StockMetaData {
 		return STOCK_CODES;
 	}
 	
+	
+	
 	public static HashMap<String, String> getStockNames(){
 		return STOCK_NAMES;
 	}
 	
+	
+	
 	public static HashMap<String, String> getStockMetaData(){
 		return STOCK_META_DATA;
+	}
+	
+	
+	
+	public static HashMap<String, String> getStockContext() throws Exception{
+		return MyContext.getStockContext();
+	}
+	
+
+	
+	
+	
+	public void setLocalStoreHomeDir() throws Exception{
+		this.DEFAULT_STORE_HOME_DIR = MyContext.DATA_DIR;
+	}
+	
+	
+	public String getLocalStoreHomeDir(){
+		return this.DEFAULT_STORE_HOME_DIR;
 	}
 	
 	

@@ -12,7 +12,7 @@
 
 				<!-- multiple thread process -->
 				<MultiThread>
-					<StockCodesNumPerThread>300</StockCodesNumPerThread>
+					<StockCodesNumPerThread>200</StockCodesNumPerThread>
 				</MultiThread>
 				<FinStmtStoreMappingFile>/BB/src/my/data/stock/ResourcesMap.xml</FinStmtStoreMappingFile>
 			</finStmts>

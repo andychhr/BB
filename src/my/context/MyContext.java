@@ -189,8 +189,12 @@ public class MyContext {
 				MyContext.projectConfigFile,
 				"//currentSource//finStmts//operation").trim();
 
+		
+		
+		
+		
 		// stock//finStmts//finStmtStoreURI
-		MyContext.FinanStmtStoreURI = MyXML.getTextByXpath(
+		MyContext.FinanStmtStoreURI = MyContext.WORKSAPCE_DIR + MyXML.getTextByXpath(
 				MyContext.projectConfigFile,
 				"//stock//finStmts//finStmtStoreURI").trim();
 

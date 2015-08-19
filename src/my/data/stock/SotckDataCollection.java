@@ -7,20 +7,22 @@ import java.util.Map;
 
 import my.context.MyContext;
 import my.crawler.apache.http.HttpFileCrawler;
-import my.data.stock.finStmt.FinancialStatementsCollectionThread;
 import my.util.file.MyFile;
 
-public abstract class SotckDataCollection {
-	protected String[] _stockcodes;
-	protected HashMap<String, String> _context;
-	protected String _storeHomeDirContextName;
 
-	public SotckDataCollection(String[] stockcodes,
-			HashMap<String, String> context, String storeHomeDirContextName) {
-		this._stockcodes = stockcodes;
-		this._context = context;
-		this._storeHomeDirContextName = storeHomeDirContextName;
+
+
+
+
+public abstract class SotckDataCollection<T extends StockMetaData> {
+	
+	
+	protected T _STOCK_META_DATA_OBJ;
+	
+	public SotckDataCollection(T stockDataObject){
+		this._STOCK_META_DATA_OBJ = stockDataObject;
 	}
+	
 
 	// =========================================================================================================
 	// Collection
@@ -28,25 +30,23 @@ public abstract class SotckDataCollection {
 
 	// for multi thread collection
 
-	public static Integer _threadUnitsSize_Collection; // total threads numbers
+	protected Integer _threadUnitsSize; // total threads numbers
 	int _threadSize = 100;
 	
 	
 	
-
-	
-	public static void addNewThread(Integer _threadUnitsSize) {
-		synchronized (_threadUnitsSize) {
-			_threadUnitsSize++;
+	public void addNewThread() {
+		synchronized (this._threadUnitsSize) {
+			this._threadUnitsSize++;
 
 		}
 	}
 		
 	
 	
-	public static void removeCompletedThread(Integer _threadUnitsSize) {
-		synchronized (_threadUnitsSize) {
-			_threadUnitsSize--;
+	public void removeCompletedThread() {
+		synchronized (this._threadUnitsSize) {
+			this._threadUnitsSize--;
 		}
 	}
 		
@@ -86,18 +86,19 @@ public abstract class SotckDataCollection {
 		this.initFAILED_REQ();
 
 		// get all stock codes
-		if (StockMetaData.getStockCodes() == null
-				|| StockMetaData.getStockCodes().length < 2000) {
+		if (this._STOCK_META_DATA_OBJ.getStockCodes() == null
+				|| this._STOCK_META_DATA_OBJ.getStockCodes().length < 2000) {
 			StockMetaData.getStockMetaData();
 		}
 
 		// start collections for all stockcodes
-		this.collection(StockMetaData.getStockCodes());
+		this.collection(this._STOCK_META_DATA_OBJ.getStockCodes());
 
 		// resubmit request if any failures
 		if (this._RESUBMIT_REQ.size() > 0) {
 			for (String xurl : this._RESUBMIT_REQ.keySet()) {
-				StockDataCollectionThread.getAndSaveContent(xurl,this._RESUBMIT_REQ.get(xurl));
+				//
+				this.getAndSaveContent(xurl,this._RESUBMIT_REQ.get(xurl));
 			}
 		}
 
@@ -109,13 +110,12 @@ public abstract class SotckDataCollection {
 	
 	
 	
-	
-	public void collection(String... stockcodes) throws InterruptedException {
+	public void collection(String... stockcodes) throws NumberFormatException, Exception {
 		//
-		this._threadSize = Integer.parseInt(this._context.get("STOCK_CODES_NUM_PER_THREAD"));
+		this._threadSize = Integer.parseInt(StockMetaData.getStockContext().get("STOCK_CODES_NUM_PER_THREAD"));
 
 		//
-		SotckDataCollection._threadUnitsSize_Collection = 0;
+		this._threadUnitsSize = 0;
 		//
 		String[] sub_scs = new String[this._threadSize];
 		for (int i = 0; i < stockcodes.length; i++) {
@@ -130,8 +130,7 @@ public abstract class SotckDataCollection {
 			}
 
 			if ((i % this._threadSize != 0 && i == stockcodes.length - 1)
-					|| (i == 0 && i == stockcodes.length - 1)) { // reach the
-																	// end
+					|| (i == 0 && i == stockcodes.length - 1)) { // reach the end
 				this.luanchThread(sub_scs); // luanch thread
 			}
 		}
@@ -139,7 +138,7 @@ public abstract class SotckDataCollection {
 		//
 		int loopTimes = 120;
 		while (loopTimes > 0) {
-			if (SotckDataCollection._threadUnitsSize_Collection > 0) {
+			if (this._threadUnitsSize > 0) {
 				Thread.sleep(1 * 60 * 1000); // every 1 min check once
 				loopTimes--;
 			} else {
@@ -154,14 +153,96 @@ public abstract class SotckDataCollection {
 	
 	
 	
-	public void luanchThread(String ...sub_scs){
-		StockDataCollectionThread xThread = new <? extends StockDataCollectionThread>(sub_scs,this._context, this._storeHomeDirContextName);	//init thread
+	
+	/**
+	 * 
+	 * @param sc_urls
+	 * @return
+	 */
+	// public abstract HashMap<String,String>
+	// getLocalStoreFiles(HashMap<String, ArrayList<String>> sc_urls);
+
+	public void collection(String stockcode,
+			Map<String, String> urls_fileName) throws Exception {
+		// String dataSourceService =
+		// this._context.get("CurrentDataSource"); //get template URLs
+		for (String xURL : urls_fileName.keySet()) {
+			// get local file absolute path
+			String xLocalFilePath = urls_fileName.get(xURL);
+
+			System.out.println("Stock is :" + stockcode + " ; xURL is "
+					+ xURL + " ;  local file abs path is "
+					+ xLocalFilePath);
+
+			// get content via http and save file into local files
+			this.getAndSaveContent(xURL,xLocalFilePath);
+		}
+	}
+	
+	
+	
+	
+	public void luanchThread(String ...sub_scs) throws Exception{
+		StockDataCollectionThread xThread = new StockDataCollectionThread(sub_scs);	//init thread
 		new Thread(xThread).start();	//start thread
 		
 		//
-		SotckDataCollection.addNewThread(SotckDataCollection._threadUnitsSize_Collection);
+		this.addNewThread();
 	}
+	
 
+	
+
+	/**
+	 * 
+	 * @param stockcodes
+	 * @return HashMap<String:stockcode, ArrayList<String>: URLs for this
+	 *         stock code>
+	 * @throws Exception 
+	 */
+	protected abstract Map<String, String> getURL_File(String stockcode) throws Exception;
+	
+	
+
+	
+	
+	public void getAndSaveContent(String url, String localFilePath) {
+		String content = "";
+		// crawl content from web
+		try {
+			content = HttpFileCrawler.getContent(url);
+		} catch (Exception ex) { // Need to handle http issues
+			//
+			synchronized (this._RESUBMIT_REQ) {
+				if (!this._RESUBMIT_REQ.containsKey(url)) {
+					this._RESUBMIT_REQ.put(url, localFilePath);
+				} else {
+					this._FAILED_REQ.put(url, localFilePath);
+				}
+			}
+			//
+			ex.printStackTrace();
+		}
+		try {
+			// craete local file if not exists
+			File xStmtFile = MyFile.createFileIfNotExits(localFilePath); 
+			
+			// Save fileoutputstream to file in local
+			synchronized (xStmtFile) {
+				//write content string to file
+				MyFile.WriteStringToFile(localFilePath, content,Charset.forName(MyContext.Charset), false); 
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			// clear resouce
+			content = null;
+		}
+
+	}
+	
+	
+	
 	
 	
 	
@@ -173,7 +254,7 @@ public abstract class SotckDataCollection {
 	 * @param <T>
 	 */
 	
-	abstract class StockDataCollectionThread
+	class StockDataCollectionThread
 			implements Runnable {
 
 		protected String[] _stockcodes;
@@ -183,11 +264,11 @@ public abstract class SotckDataCollection {
 //		protected static Map<String, String> _RequestNeedToBeResubmit;
 //		protected static Map<String, String> _FailedRequestNeedToBeReviewed;
 
-		public StockDataCollectionThread(String[] stockcodes,
-				HashMap<String, String> context, String storeHomeDirContextName) {
+		public StockDataCollectionThread(String[] stockcodes) throws Exception {
 			this._stockcodes = stockcodes;
-			this._context = context;
-			this._localStoreHomeDir = this._context.get(storeHomeDirContextName);
+			MyContext.getInstance();
+			this._context = MyContext.getStockContext();
+			this._localStoreHomeDir = StockMetaData.getInstance().getLocalStoreHomeDir();
 		}
 
 		@Override
@@ -195,15 +276,22 @@ public abstract class SotckDataCollection {
 			//
 			for (String xsc : this._stockcodes) {
 
-				Map<String, String> sc_urls_localFiles = this.getURL_File(xsc);
+				Map<String, String> sc_urls_localFiles = null;
+				try {
+					sc_urls_localFiles = SotckDataCollection.this.getURL_File(xsc);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
 
 				try {
-					this.collection(xsc, sc_urls_localFiles);
+					SotckDataCollection.this.collection(xsc, sc_urls_localFiles);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
+			
+			//decrease thread number
+			SotckDataCollection.this.removeCompletedThread();
 
 		}
 
@@ -217,78 +305,16 @@ public abstract class SotckDataCollection {
 //			return this._localStoreHomeDir;
 //		}
 
-		/**
-		 * 
-		 * @param stockcodes
-		 * @return HashMap<String:stockcode, ArrayList<String>: URLs for this
-		 *         stock code>
-		 */
-		protected abstract Map<String, String> getURL_File(String stockcode);
+		
 
-		/**
-		 * 
-		 * @param sc_urls
-		 * @return
-		 */
-		// public abstract HashMap<String,String>
-		// getLocalStoreFiles(HashMap<String, ArrayList<String>> sc_urls);
-
-		public void collection(String stockcode,
-				Map<String, String> urls_fileName) throws Exception {
-			// String dataSourceService =
-			// this._context.get("CurrentDataSource"); //get template URLs
-			for (String xURL : urls_fileName.keySet()) {
-				// get local file absolute path
-				String xStmtLocalFilePath = urls_fileName.get(xURL);
-
-				System.out.println("Stock is :" + stockcode + " ; xURL is "
-						+ xURL + " ;  local file abs path is "
-						+ xStmtLocalFilePath);
-
-				// get content via http and save file into local files
-				FinancialStatementsCollectionThread.getAndSaveContent(xURL,
-						xStmtLocalFilePath);
-			}
-		}
-
-		public static void getAndSaveContent(String url, String localFilePath) {
-			String content = "";
-			// crawl content from web
-			try {
-				content = HttpFileCrawler.getContent(url);
-			} catch (Exception ex) { // Need to handle http issues
-				//
-				synchronized (_RESUBMIT_REQ) {
-					if (!T._RESUBMIT_REQ.containsKey(url)) {
-						T._RESUBMIT_REQ.put(url, localFilePath);
-					} else {
-						T._FAILED_REQ.put(url, localFilePath);
-					}
-				}
-				//
-				ex.printStackTrace();
-			}
-			try {
-				// craete local file if not exists
-				File xStmtFile = MyFile.createFileIfNotExits(localFilePath); // create
-																				// file
-																				// if
-																				// not
-																				// exists
-				// Save fileoutputstream to file in local
-				synchronized (xStmtFile) {
-					//write content string to file
-					MyFile.WriteStringToFile(localFilePath, content,Charset.forName(MyContext.Charset), false); 
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				// clear resouce
-				content = null;
-			}
-
-		}
+		
+		
+		
 
 	}
+	
+	
+
+
 
 }
