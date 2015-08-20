@@ -33,8 +33,6 @@ public abstract class SotckDataCollection<T extends StockMetaData> {
 	protected Integer _threadUnitsSize; // total threads numbers
 	int _threadSize = 100;
 	
-	
-	
 	public void addNewThread() {
 		synchronized (this._threadUnitsSize) {
 			this._threadUnitsSize++;
@@ -42,8 +40,6 @@ public abstract class SotckDataCollection<T extends StockMetaData> {
 		}
 	}
 		
-	
-	
 	public void removeCompletedThread() {
 		synchronized (this._threadUnitsSize) {
 			this._threadUnitsSize--;
@@ -52,21 +48,15 @@ public abstract class SotckDataCollection<T extends StockMetaData> {
 		
 
 	
+	
+	
 	private HashMap<String, String> _RESUBMIT_REQ;
 	private HashMap<String, String> _FAILED_REQ;
-	
-	
-	
-	
 	
 	public void initRESUBMIT_REQ(){
 		this._RESUBMIT_REQ = new HashMap<String, String>();
 		this._RESUBMIT_REQ.clear();
 	}
-	
-	
-	
-	
 	
 	public void initFAILED_REQ(){
 
