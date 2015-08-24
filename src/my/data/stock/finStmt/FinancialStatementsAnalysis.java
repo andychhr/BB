@@ -1,6 +1,6 @@
 package my.data.stock.finStmt;
 
-public class FinancialStatementsAnalysisThread implements Runnable {
+public class FinancialStatementsAnalysis implements Runnable {
 
 	@Override
 	public void run() {

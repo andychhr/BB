@@ -18,9 +18,15 @@ public abstract class SotckDataCollection<T extends StockMetaData> {
 	
 	
 	protected T _STOCK_META_DATA_OBJ;
+	protected String[] _stockcodes;
+	protected HashMap<String, String> _context;
 	
-	public SotckDataCollection(T stockDataObject){
+	public SotckDataCollection(T stockDataObject) throws Exception{
+		T.getInstance();
 		this._STOCK_META_DATA_OBJ = stockDataObject;
+		this._context = T.getStockContext();
+//		MyContext.getInstance();
+//		this._context = this._STOCK_META_DATA_OBJ.getInstance().getStockContext();
 	}
 	
 
@@ -76,13 +82,13 @@ public abstract class SotckDataCollection<T extends StockMetaData> {
 		this.initFAILED_REQ();
 
 		// get all stock codes
-		if (this._STOCK_META_DATA_OBJ.getStockCodes() == null
-				|| this._STOCK_META_DATA_OBJ.getStockCodes().length < 2000) {
-			StockMetaData.getStockMetaData();
+		if (T.getStockCodes() == null
+				|| T.getStockCodes().length < 2000) {
+			T.getStockMetaData();
 		}
 
 		// start collections for all stockcodes
-		this.collection(this._STOCK_META_DATA_OBJ.getStockCodes());
+		this.collection(T.getStockCodes());
 
 		// resubmit request if any failures
 		if (this._RESUBMIT_REQ.size() > 0) {
@@ -160,9 +166,9 @@ public abstract class SotckDataCollection<T extends StockMetaData> {
 			// get local file absolute path
 			String xLocalFilePath = urls_fileName.get(xURL);
 
-			System.out.println("Stock is :" + stockcode + " ; xURL is "
-					+ xURL + " ;  local file abs path is "
-					+ xLocalFilePath);
+//			System.out.println("Stock is :" + stockcode + " ; xURL is "
+//					+ xURL + " ;  local file abs path is "
+//					+ xLocalFilePath);
 
 			// get content via http and save file into local files
 			this.getAndSaveContent(xURL,xLocalFilePath);
@@ -248,23 +254,22 @@ public abstract class SotckDataCollection<T extends StockMetaData> {
 			implements Runnable {
 
 		protected String[] _stockcodes;
-		protected HashMap<String, String> _context;
 		protected String _localStoreHomeDir;
 
-//		protected static Map<String, String> _RequestNeedToBeResubmit;
-//		protected static Map<String, String> _FailedRequestNeedToBeReviewed;
+
 
 		public StockDataCollectionThread(String[] stockcodes) throws Exception {
 			this._stockcodes = stockcodes;
-			MyContext.getInstance();
-			this._context = MyContext.getStockContext();
-			this._localStoreHomeDir = StockMetaData.getInstance().getLocalStoreHomeDir();
+			this._localStoreHomeDir = _STOCK_META_DATA_OBJ.getLocalStoreHomeDir();
 		}
 
 		@Override
 		public void run() {
 			//
 			for (String xsc : this._stockcodes) {
+				if(xsc == null){
+					continue;
+				}
 
 				Map<String, String> sc_urls_localFiles = null;
 				try {
@@ -283,26 +288,19 @@ public abstract class SotckDataCollection<T extends StockMetaData> {
 			//decrease thread number
 			SotckDataCollection.this.removeCompletedThread();
 
-		}
-
-//		protected abstract void setRequestNeedToBeResubmit(
-//				Map<String, String> RequestNeedToBeResubmit);
-//
-//		protected abstract void setFailedRequestNeedToBeReviewed(
-//				Map<String, String> FailedRequestNeedToBeReviewed);
-//
-//		public String getLocalStoreHomeDir() {
-//			return this._localStoreHomeDir;
-//		}
-
-		
-
-		
-		
+		}		
 		
 
 	}
 	
+	
+	
+	
+	
+	
+	
+	/** ===============================================================
+	 */
 	
 
 

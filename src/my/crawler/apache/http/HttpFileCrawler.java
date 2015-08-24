@@ -1,7 +1,5 @@
 package my.crawler.apache.http;
 
-import java.io.FileOutputStream;
-
 import my.crawler.FileCrawler;
 import my.util.http.MyHttpClient;
 

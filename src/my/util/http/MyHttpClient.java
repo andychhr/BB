@@ -91,6 +91,7 @@ public class MyHttpClient {
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
+			throw ex;
 		} finally {
 			//clear resouce
 			httppost = null;

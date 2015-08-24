@@ -2,7 +2,7 @@ package my.data.stock.finStmt;
 
 import java.util.HashMap;
 
-public class FinancialStatementsPreprocessThread implements Runnable{
+public class FinancialStatementsPreprocess implements Runnable{
 
 	@Override
 	public void run() {

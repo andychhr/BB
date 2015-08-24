@@ -11,7 +11,7 @@ public class FinancialStatementCollection extends
 
 	
 	
-	public FinancialStatementCollection(FinStmtDataObj stockDataObject) {
+	public FinancialStatementCollection(FinStmtDataObj stockDataObject) throws Exception {
 		super(stockDataObject);
 	}
 
@@ -26,14 +26,14 @@ public class FinancialStatementCollection extends
 		url_file.clear();
 		
 		
-		StockMetaData.getInstance();
+//		StockMetaData.getInstance();
 		//get template URLs
-		for(String key : StockMetaData.getStockContext().keySet()){
+		for(String key : FinStmtDataObj.getStockContext().keySet()){
 			if(key.contains("StmtURI")){
-				String xStmtURI = StockMetaData.getStockContext().get(key);	//get x statement URIs
+				String xStmtURI = FinStmtDataObj.getStockContext().get(key);	//get x statement URIs
 				xStmtURI=xStmtURI.replace("$sc$", stockcode).trim();	//replace "$sc$" to real stock code
 				String xURL = StockMetaData.getStockContext().get("CurrentDataSource") + xStmtURI;	// get real statement url
-				System.out.println("xURL for stockcode:"+stockcode + "is " + xURL);
+//				System.out.println("xURL for stockcode:"+stockcode + "is " + xURL);
 				
 				//get local file absolute path
 				String xStmtLocalFilePath = this._STOCK_META_DATA_OBJ.getLocalStoreHomeDir() + "/" + this.getStmtName(key) + ".csv"; // get file abs location
