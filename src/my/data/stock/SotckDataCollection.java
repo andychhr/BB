@@ -21,10 +21,12 @@ public abstract class SotckDataCollection<T extends StockMetaData> {
 	protected String[] _stockcodes;
 	protected HashMap<String, String> _context;
 	
+	
 	public SotckDataCollection(T stockDataObject) throws Exception{
 		T.getInstance();
 		this._STOCK_META_DATA_OBJ = stockDataObject;
 		this._context = T.getStockContext();
+		
 //		MyContext.getInstance();
 //		this._context = this._STOCK_META_DATA_OBJ.getInstance().getStockContext();
 	}
@@ -189,14 +191,14 @@ public abstract class SotckDataCollection<T extends StockMetaData> {
 
 	
 
-	/**
-	 * 
-	 * @param stockcodes
-	 * @return HashMap<String:stockcode, ArrayList<String>: URLs for this
-	 *         stock code>
-	 * @throws Exception 
-	 */
-	protected abstract Map<String, String> getURL_File(String stockcode) throws Exception;
+//	/**
+//	 * 
+//	 * @param stockcodes
+//	 * @return HashMap<String:stockcode, ArrayList<String>: URLs for this
+//	 *         stock code>
+//	 * @throws Exception 
+//	 */
+//	protected abstract Map<String, String> getURL_File(String stockcode) throws Exception;
 	
 	
 
@@ -270,10 +272,10 @@ public abstract class SotckDataCollection<T extends StockMetaData> {
 				if(xsc == null){
 					continue;
 				}
-
+  
 				Map<String, String> sc_urls_localFiles = null;
 				try {
-					sc_urls_localFiles = SotckDataCollection.this.getURL_File(xsc);
+					sc_urls_localFiles = SotckDataCollection.this._STOCK_META_DATA_OBJ.getURL_File(xsc);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}

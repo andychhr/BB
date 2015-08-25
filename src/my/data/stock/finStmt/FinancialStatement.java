@@ -91,149 +91,11 @@ public class FinancialStatement implements MetaData, Analysis {
 	//=========================================================================================================
 	
 	//for multi thread collection 
-	
-	public static Integer _threadUnitsSize_Collection;	//total threads numbers
-	int _threadSize = 100;
-	
-	
-	public static void addNewThread(Integer _threadUnitsSize) {
-        synchronized (_threadUnitsSize) {
-        	_threadUnitsSize++;
-
-        }
-    }
-
-    public static void removeCompletedThread(Integer _threadUnitsSize) {
-        synchronized (_threadUnitsSize) {
-        	_threadUnitsSize--;
-        }
-    }
-	
-
-//    public static void addNewThread(Integer _threadUnitsSize) {
-//        synchronized (FinancialStatement._threadUnitsSize_Collection) {
-//        	FinancialStatement._threadUnitsSize_Collection++;
-//
-//        }
-//    }
-//
-//    public static void removeCompletedThread() {
-//        synchronized (FinancialStatement._threadUnitsSize_Collection) {
-//        	FinancialStatement._threadUnitsSize_Collection--;
-//        }
-//    }
-    
-    
-    public static HashMap<String, String> RequestNeedToBeResubmit;
-    public static HashMap<String, String> FailedRequestNeedToBeReviewed;
-    
-    
-	@Override
-	/**
-	 * Collect for all stock codes with muti-threads
-	 */
-	public void collection() throws Exception {
-		
-		
-		//
-		FinancialStatement.RequestNeedToBeResubmit = new HashMap<String, String>();
-		FinancialStatement.RequestNeedToBeResubmit.clear();
-		FinancialStatement.FailedRequestNeedToBeReviewed = new HashMap<String, String>();
-		FinancialStatement.FailedRequestNeedToBeReviewed.clear();
-		
-		//get all stock codes
-		if(StockMetaData.getStockCodes() == null || StockMetaData.getStockCodes().length < 2000){
-			StockMetaData.getStockMetaData();
-		}
-		
-		//start collections for all stockcodes
-		this.collection(StockMetaData.getStockCodes());
-		
-		
-		//resubmit request if any failures
-		if(FinancialStatement.RequestNeedToBeResubmit.size() > 0 ){
-			for(String xurl : FinancialStatement.RequestNeedToBeResubmit.keySet() ){
-				FinancialStatementsCollectionThread.getAndSaveContent(xurl,  FinancialStatement.RequestNeedToBeResubmit.get(xurl));				
-			}
-		}
-		
-		
-		//clear resource
-		FinancialStatement.RequestNeedToBeResubmit = null;
-		
+	public void collection() throws Exception{
+		FinStmtDataObj obj = new FinStmtDataObj();
+		FinancialStatementCollection fsc = new FinancialStatementCollection(obj);
+		fsc.collection();
 	}
-	
-	
-	
-	public void collection(String ...stockcodes) throws InterruptedException {
-		//
-		this._threadSize = Integer.parseInt(FinancialStatement._context.get("STOCK_CODES_NUM_PER_THREAD"));
-		
-		//
-		FinancialStatement._threadUnitsSize_Collection = 0;
-		//
-		String[] sub_scs = new String[this._threadSize];
-		for (int i = 0; i < stockcodes.length; i++) {
-			// add stock codes into sub stock codes
-			sub_scs[i % this._threadSize] = stockcodes[i];
-			//
-			if (i % this._threadSize == 0) {
-				if (i > 0) {
-					this.luanchThread(sub_scs); //luanch thread
-				}
-				sub_scs = new String[this._threadSize];
-			}
-
-			if ((i % this._threadSize != 0 && i == stockcodes.length - 1)
-					|| (i == 0 && i == stockcodes.length - 1)) { // reach the end
-				this.luanchThread(sub_scs);	//luanch thread
-			}
-		}
-
-		//
-		int loopTimes = 120;
-		while (loopTimes > 0) {
-			if (FinancialStatement._threadUnitsSize_Collection > 0) {
-				Thread.sleep(1 * 60 * 1000); // every 1 min check once
-				loopTimes--;
-			} else {
-				loopTimes = -1; // exit loop
-			}
-		}
-
-		// ----------------------------------------------------------
-		System.out.println("Done");
-	}
-	
-	public void luanchThread(String ...sub_scs){
-		FinancialStatementsCollectionThread xThread = new FinancialStatementsCollectionThread(sub_scs,FinancialStatement._context);	//init thread
-		new Thread(xThread).start();	//start thread
-		
-		//
-		FinancialStatement.addNewThread(FinancialStatement._threadUnitsSize_Collection);
-	}
-	
-	
-	
-	
-	
-	
-	//=========================================================================================================
-		
-
-	@Override
-	public void collection(Date date) {
-		// TODO Auto-generated method stub
-
-	}
-	
-	
-	
-	
-	public void collection(String stockcode,Date date) {
-		// TODO Auto-generated method stub
-		
-	}   
 	
 	
 	
@@ -360,6 +222,12 @@ public class FinancialStatement implements MetaData, Analysis {
 
 	@Override
 	public void analysis() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void collection(Date date) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -3,6 +3,7 @@ package my.data.stock;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,16 +21,17 @@ public class StockMetaData {
 	protected static HashMap<String, String> STOCK_NAMES;
 	protected static HashMap<String, String> STOCK_META_DATA;
 	
-	//protected static MyContext STOCK_CONTEXT;
+
 	
 	protected String DEFAULT_STORE_HOME_DIR;
+	
+	public static Map<String, Map<String, String>>  COLLECTION_CONTEXT;
 	
 	
 	//------------------------------------------------------
 	
 	protected final static StockMetaData instance = new StockMetaData();
 	private static boolean initialized = false;
-	
 	
 	
 	protected StockMetaData(){
@@ -49,7 +51,7 @@ public class StockMetaData {
 	
 	
 	
-	private void init() throws Exception{
+	protected void init() throws Exception{
 		
 		//set context
 		MyContext.getInstance();
@@ -153,6 +155,32 @@ public class StockMetaData {
 	public String getLocalStoreHomeDir(){
 		return this.DEFAULT_STORE_HOME_DIR;
 	}
+	
+	
+	
+	
+	public void collection(String ...stockcodes) throws Exception{
+		
+	}
+	
+	
+	//@to-do
+	public  Map<String, String> getURL_File(String stockcode) throws Exception{
+		return null;
+	}
+	
+	
+	public Map<String, Map<String, String>> getCollectionContext(String []stockcodes) throws Exception{
+		Map<String, Map<String, String>> collContext = new HashMap<String, Map<String, String>>();
+		collContext.clear();
+		
+		for(String sc : stockcodes){
+			collContext.put(sc, this.getURL_File(sc));
+		}
+		
+		return collContext;
+	}
+	
 	
 	
 	
