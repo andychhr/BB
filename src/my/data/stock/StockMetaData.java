@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
 
 import my.context.MyContext;
+import my.util.file.MyFile;
 
 
 
@@ -159,27 +160,62 @@ public class StockMetaData {
 	
 	
 	
-	public void collection(String ...stockcodes) throws Exception{
-		
-	}
 	
 	
-	//@to-do
-	public  Map<String, String> getURL_File(String stockcode) throws Exception{
+	
+	// TODO
+	public Map<String, String> getURL_File(String stockcode) throws Exception {
 		return null;
 	}
-	
-	
-	public Map<String, Map<String, String>> getCollectionContext(String []stockcodes) throws Exception{
-		Map<String, Map<String, String>> collContext = new HashMap<String, Map<String, String>>();
-		collContext.clear();
-		
-		for(String sc : stockcodes){
-			collContext.put(sc, this.getURL_File(sc));
-		}
-		
-		return collContext;
+
+	// TODO
+	public void collection(String stockcode) throws Exception {
+
 	}
+
+	public void analysis(String stockcode) {
+		// TODO Auto-generated method stub
+
+	}
+	
+	
+	
+	
+	public void saveToLocalFile(String content, String localFilePath){
+		try {
+			// craete local file if not exists
+			File xStmtFile = MyFile.createFileIfNotExits(localFilePath); 
+			
+			// Save fileoutputstream to file in local
+			synchronized (xStmtFile) {
+				//write content string to file
+				MyFile.WriteStringToFile(localFilePath, content,Charset.forName(MyContext.Charset), false); 
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			// clear resouce
+			content = null;
+		}
+	}
+	
+	
+	
+	
+//	public Map<String, Map<String, String>> getCollectionContext(String []stockcodes) throws Exception{
+//		Map<String, Map<String, String>> collContext = new HashMap<String, Map<String, String>>();
+//		collContext.clear();
+//		
+//		for(String sc : stockcodes){
+//			collContext.put(sc, this.getURL_File(sc));
+//		}
+//		
+//		return collContext;
+//	}
+
+
+
+	
 	
 	
 	

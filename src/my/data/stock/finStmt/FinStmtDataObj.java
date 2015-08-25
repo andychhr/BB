@@ -5,8 +5,9 @@ import java.util.Map;
 
 import my.context.MyContext;
 import my.crawler.apache.http.HttpFileCrawler;
-import my.data.stock.StockDataPreprocess;
+
 import my.data.stock.StockMetaData;
+
 
 public class FinStmtDataObj extends StockMetaData {
 	
@@ -23,20 +24,20 @@ public class FinStmtDataObj extends StockMetaData {
 		super.getInstance();
 		this.setLocalStoreHomeDir();
 		
-		StockMetaData.COLLECTION_CONTEXT = this.getCollectionContext(StockMetaData.STOCK_CODES);
+		//StockMetaData.COLLECTION_CONTEXT = this.getCollectionContext(StockMetaData.STOCK_CODES);
 	}
 	
 	
-	public Map<String, Map<String, String>> getCollectionContext(String []stockcodes) throws Exception{
-		Map<String, Map<String, String>> collContext = new HashMap<String, Map<String, String>>();
-		collContext.clear();
-		
-		for(String sc : stockcodes){
-			collContext.put(sc, this.getURL_File(sc));
-		}
-		
-		return collContext;
-	}
+//	public Map<String, Map<String, String>> getCollectionContext(String []stockcodes) throws Exception{
+//		Map<String, Map<String, String>> collContext = new HashMap<String, Map<String, String>>();
+//		collContext.clear();
+//		
+//		for(String sc : stockcodes){
+//			collContext.put(sc, this.getURL_File(sc));
+//		}
+//		
+//		return collContext;
+//	}
 	
 	
 
@@ -70,61 +71,81 @@ public class FinStmtDataObj extends StockMetaData {
 	}
 	
 	
+	
+	
+	
+	
 	@Override
-	public void collection(String ...stockcodes){
-		for (String xsc : stockcodes) {
-			if(xsc == null){
-				continue;
-			}
+	public void collection(String stockcode) throws Exception {
 
-			Map<String, String> sc_urls_localFiles = null;
-			try {
-				sc_urls_localFiles = this.getURL_File(xsc);
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
+		
 
-			try {
-				content = HttpFileCrawler.getContent(url);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		
-	}
-		
-		public void collection_GetAndSaveContent(String url, String localFilePath) {
-			String content = "";
-			// crawl content from web
-			content = this.collection_getContent(url, localFilePath);
-			
-			
-			//Save to Local file
+		Map<String, String> sc_urls_localFiles = null;
+		try {
+			sc_urls_localFiles = this.getURL_File(stockcode);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		for (String xURL : sc_urls_localFiles.keySet()) {
+			// get content from web
+			String content = HttpFileCrawler.getContent(xURL);
+
+			// save content into local files
+			String localFilePath = sc_urls_localFiles.get(xURL);
 			this.saveToLocalFile(content, localFilePath);
 
+			// clear resource
+			content = null;
 		}
+
+	}
+	
+	
+	
+	
+	@Override
+	public void analysis(String stockcode){
+	
+	}
+		
+		
+	
+		
+//		public void collection_GetAndSaveContent(String url, String localFilePath) {
+//			String content = "";
+//			// crawl content from web
+//			content = this.collection_getContent(url, localFilePath);
+//			
+//			
+//			//Save to Local file
+//			this.saveToLocalFile(content, localFilePath);
+//
+//		}
 		
 		
 		
 
-		public String collection_getContent(String url,String localFilePath){
-			String content = "";
-			try {
-				content = HttpFileCrawler.getContent(url);
-			} catch (Exception ex) { // Need to handle http issues
-				//
-				synchronized (this._RESUBMIT_RECORDS) {
-					if (!this._RESUBMIT_REQ.containsKey(url)) {
-						this._RESUBMIT_REQ.put(url, localFilePath);
-					} else {
-						this._FAILED_REQ.put(url, localFilePath);
-					}
-				}
-				//
-				ex.printStackTrace();
-			}
-			
-			return content;
-		}
+//		public String collection_getContent(String url,String localFilePath){
+//			String content = "";
+//			try {
+//				content = HttpFileCrawler.getContent(url);
+//			} catch (Exception ex) { // Need to handle http issues
+//				//
+//				synchronized (this._RESUBMIT_RECORDS) {
+//					if (!this._RESUBMIT_REQ.containsKey(url)) {
+//						this._RESUBMIT_REQ.put(url, localFilePath);
+//					} else {
+//						this._FAILED_REQ.put(url, localFilePath);
+//					}
+//				}
+//				//
+//				ex.printStackTrace();
+//			}
+//			
+//			return content;
+//		}
 		
 		
 	

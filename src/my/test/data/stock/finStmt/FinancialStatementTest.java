@@ -6,7 +6,6 @@ import java.util.HashMap;
 import my.context.MyContext;
 import my.data.stock.StockMetaData;
 import my.data.stock.finStmt.FinStmtDataObj;
-import my.data.stock.finStmt.FinancialStatement;
 import my.data.stock.finStmt.FinancialStatementCollection;
 
 import org.junit.Test;
@@ -35,8 +34,8 @@ public class FinancialStatementTest {
 //		
 		
 		FinStmtDataObj obj = new FinStmtDataObj();
-		String[] scs = FinStmtDataObj.getStockCodes();
-		HashMap<String,String> scContext = FinStmtDataObj.getStockContext(); 
+//		String[] scs = FinStmtDataObj.getStockCodes();
+//		HashMap<String,String> scContext = FinStmtDataObj.getStockContext(); 
 		FinancialStatementCollection fsc = new FinancialStatementCollection(obj);
 		fsc.collection();
 		
