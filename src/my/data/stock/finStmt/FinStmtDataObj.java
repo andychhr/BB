@@ -38,6 +38,37 @@ public class FinStmtDataObj extends StockMetaData {
 //		
 //		return collContext;
 //	}
+
+	
+	
+	
+	/***************************************************************************
+	 * 
+	 * 
+	 *************************************************************************/
+	
+	
+	
+	@Override
+	public void setLocalStoreHomeDir() throws Exception{
+		MyContext.getInstance();
+		this._FinStmt_STORE_HOME_DIR = MyContext.getStockContext().get("FinanStmtStoreURI");
+	}
+	
+	
+	@Override
+	public String getLocalStoreHomeDir(){
+		return this._FinStmt_STORE_HOME_DIR;
+	}
+	
+	
+	
+	
+
+	/***************************************************************************
+	 * 
+	 * 
+	 *************************************************************************/
 	
 	
 
@@ -75,6 +106,9 @@ public class FinStmtDataObj extends StockMetaData {
 	
 	
 	
+	
+	
+	
 	@Override
 	public void collection(String stockcode) throws Exception {
 
@@ -105,8 +139,17 @@ public class FinStmtDataObj extends StockMetaData {
 	
 	
 	
+	
+	
+	/***************************************************************************
+	 * 
+	 * 
+	 *************************************************************************/
+	
+	
 	@Override
 	public void analysis(String stockcode){
+		
 	
 	}
 		
@@ -151,17 +194,7 @@ public class FinStmtDataObj extends StockMetaData {
 	
 	
 	
-	@Override
-	public void setLocalStoreHomeDir() throws Exception{
-		MyContext.getInstance();
-		this._FinStmt_STORE_HOME_DIR = MyContext.getStockContext().get("FinanStmtStoreURI");
-	}
 	
-	
-	@Override
-	public String getLocalStoreHomeDir(){
-		return this._FinStmt_STORE_HOME_DIR;
-	}
 	
 	
 
