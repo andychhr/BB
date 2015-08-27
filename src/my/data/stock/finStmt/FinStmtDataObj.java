@@ -89,11 +89,10 @@ public class FinStmtDataObj extends StockMetaData {
 //				System.out.println("xURL for stockcode:"+stockcode + "is " + xURL);
 				
 				//get local file absolute path
-				String xStmtLocalFilePath = this.getLocalStoreHomeDir() + "/" + this.getStmtName(key) + ".csv"; // get file abs location
+				String xStmtLocalFilePath = this.getLocalStoreHomeDir() + "/" +stockcode+"/" +this.getStmtName(key) + ".csv"; // get file abs location
 				
 				url_file.put(xURL, xStmtLocalFilePath);
-				//get content via http and save file into local files
-				//getAndSaveContent(xURL, xStmtLocalFilePath);
+
 			}
 		}	
 		
@@ -133,6 +132,8 @@ public class FinStmtDataObj extends StockMetaData {
 			// clear resource
 			content = null;
 		}
+		
+		System.out.println("collection is done for stock:"+stockcode);
 
 	}
 	

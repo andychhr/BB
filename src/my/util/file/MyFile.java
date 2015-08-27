@@ -1,8 +1,8 @@
 package my.util.file;
 
-import java.io.BufferedOutputStream;
+
 import java.io.File;
-import java.io.FileOutputStream;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -10,8 +10,6 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 
 import org.apache.commons.io.FileUtils;
-import org.dom4j.io.OutputFormat;
-import org.dom4j.io.XMLWriter;
 
 
 public class MyFile {
@@ -278,6 +276,11 @@ public class MyFile {
 	public static void  WriteStringToFile(String xStmt, String content, Charset encoding, boolean append) throws IOException {
 		// TODO Auto-generated method stub
 		FileUtils.writeStringToFile(new File(xStmt), content, encoding, append);
+	}
+	
+	
+	public static String readFileToString(String file, Charset encoding) throws IOException{
+		return FileUtils.readFileToString(new File(file), encoding);
 	}
 	
 	

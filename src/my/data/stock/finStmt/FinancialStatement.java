@@ -2,10 +2,14 @@ package my.data.stock.finStmt;
 
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -148,8 +152,8 @@ public class FinancialStatement implements MetaData, Analysis {
 			File[] scDirs = finanStmtsLocalStoreHomeDir.listFiles();	//stock codes' dirs
 			for(File xscDir : scDirs){
 				//ADD element for stock code level
-				org.dom4j.Element e_sc = root.addElement("stockcode")
-						.addAttribute("stockcode", xscDir.getName())
+				org.dom4j.Element e_sc = root.addElement("stock")
+						.addAttribute("code", xscDir.getName())
 						.addAttribute("path", xscDir.getAbsolutePath());
 				
 				if(MyFile.validateDirectory(xscDir.getAbsolutePath())){
@@ -176,11 +180,11 @@ public class FinancialStatement implements MetaData, Analysis {
 			try {
 				SAXReader saxReader = new SAXReader(); // 
 				document = saxReader.read(mapFilePath); // 
-				List<? extends Node> list = document.selectNodes("/FinancialStatements");	//get node by xpath 
+				List<? extends Node> list = document.selectNodes("//stock");	//get node by xpath 
 				Iterator<?> iter_sc = list.iterator();	// stock code level iterator
 				while (iter_sc.hasNext()) {	// loop to get all elements' attribute
 					Element xel = (Element) iter_sc.next();
-					String xAttrVal = xel.attributeValue("stockcode");	// get stock code
+					String xAttrVal = xel.attributeValue("code");	// get stock code
 					if(xAttrVal == null){
 						throw new Exception("Element ://stockcode cannot find attribute: stockcode");
 					}else if(StockMetaData.validateStockCode(xAttrVal))	{	// attributes value is a stock code
@@ -219,6 +223,61 @@ public class FinancialStatement implements MetaData, Analysis {
 	// =========================================================================================================
 	// Analysis meta data
 	// =========================================================================================================
+	
+	public static HashMap<String, ArrayList<String>>  getFinStmtFieldsString sc,
+	String localStoreHomeDir) throws Exception {
+		HashMap<String, String> contents = readFinStmtFilesContent(sc,localStoreHomeDir);
+		for(String xField : contents.keySet()){
+			String longStr = contents.get(xField);
+			String []values = longStr.split(",");
+			
+		}
+	}
+	
+	
+	
+	public static HashMap<String, String> readFinStmtFilesContent(String sc,
+			String localStoreHomeDir) throws Exception {
+
+		HashMap<String, String> fields = new HashMap<String, String>();
+		fields.clear();
+
+		Map<String, String> files = getFinStmtFileList(sc, localStoreHomeDir);
+		for (String xFile : files.keySet()) {
+			String xContent = MyFile.readFileToString(xFile,
+					Charset.forName(MyContext.Charset));
+			fields = getFieldsValue(xContent, fields);
+		}
+
+		return fields;
+	}
+	
+	
+	
+	public static Map<String,String> getFinStmtFileList(String sc, String localStoreHomeDir) throws Exception{
+		return MyFile.getAllFilesUnderDirectory(localStoreHomeDir+"/"+sc);
+	}
+	
+	
+	
+	public static HashMap<String, String> getFieldsValue(String inStr,
+			HashMap<String, String> fieldsValues) {
+		String[] str_is_line = inStr.split("\n");
+		for (String xline : str_is_line) {
+			int firstComma = xline.indexOf(",");
+			String fieldName_key = xline.substring(0, firstComma).trim();
+			String fieldValue = xline.substring(firstComma + 1).trim();
+			if (fieldsValues.containsValue(fieldName_key)) {
+				// key is exists
+				continue;
+			} else {
+				// key is not exists
+				fieldsValues.put(fieldName_key, fieldValue);
+			}
+		}
+
+		return fieldsValues;
+	}
 
 	@Override
 	public void analysis() {
