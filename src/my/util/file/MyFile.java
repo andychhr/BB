@@ -195,7 +195,7 @@ public class MyFile {
 
 		// add all files into hashmap
 		for (String xf : childs) {
-			File f = new File(dirPath + "\\" + xf);
+			File f = new File(dirPath + "/" + xf);
 			String absPath = f.getAbsolutePath();
 			indFiles.put(xf.trim(), absPath);
 		}

@@ -22,6 +22,26 @@ public class FinancialStatementFieldsMap {
 		
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
+	public static FinancialStatementFieldsMap getInstance(){
+		if (initialized) return instance;
+	    instance.init();
+	    initialized = true;
+	    return instance;
+	}
+	
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public static HashMap<String,String> getFieldsMap(){
+		return FinancialStatementFieldsMap.FieldsMap;
+	}
+	
 	private void init(){
 		if(!initialized){
 		FinancialStatementFieldsMap.FieldsMap = new HashMap<String,String>(); 
@@ -336,25 +356,7 @@ public class FinancialStatementFieldsMap {
 	}
 	
 	
-	/**
-	 * 
-	 * @return
-	 */
-	public FinancialStatementFieldsMap getInstance(){
-		if (initialized) return instance;
-	    instance.init();
-	    initialized = true;
-	    return instance;
-	}
 	
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public static synchronized HashMap<String,String> getFieldsMap(){
-		return FinancialStatementFieldsMap.FieldsMap;
-	}
 
 
 }
