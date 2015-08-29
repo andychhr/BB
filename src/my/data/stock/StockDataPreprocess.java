@@ -207,6 +207,7 @@ public abstract class StockDataPreprocess <T extends StockMetaData>{
 			this._stockcodes = stockcodes;
 			this._localStoreHomeDir = _STOCK_META_DATA_OBJ.getLocalStoreHomeDir();
 			
+			
 			this._actionName = actionName.trim().toLowerCase();
 		}
 
@@ -221,18 +222,27 @@ public abstract class StockDataPreprocess <T extends StockMetaData>{
 				}
 			}
 			
-			if(_actionName.equals("collection")){
-				this.collection(this._stockcodes);
-			}else if(_actionName.equals("analysis")){
-				this.analysis(this._stockcodes);
-			}
+			this.actionHandler(this._actionName, this._stockcodes);
+			
+//			if(_actionName.equals("collect")){
+//				this.collection(this._stockcodes);
+//			}else if(_actionName.equals("extract")){
+//				this.analysis(this._stockcodes);
+//			}
+//				else if(_actionName.equals("analysis")){
+//				this.analysis(this._stockcodes);
+//			}
 			
 		}
 
 		
 		
-		
-		public void collection(String... stockcodes) {
+		/**
+		 * data action handler
+		 * @param actionName
+		 * @param stockcodes
+		 */
+		public void actionHandler(String actionName, String... stockcodes) {
 			//
 			for (String xSC : stockcodes) {
 				if (xSC == null) {
@@ -241,8 +251,14 @@ public abstract class StockDataPreprocess <T extends StockMetaData>{
 
 				try {
 
-					StockDataPreprocess.this._STOCK_META_DATA_OBJ.collection(xSC);
-
+					if (_actionName.equals("collect")) {
+						_STOCK_META_DATA_OBJ.collection(xSC);
+					} else if (_actionName.equals("extract")) {
+						_STOCK_META_DATA_OBJ.extract(xSC);
+					} else if (_actionName.equals("analysis")) {
+						_STOCK_META_DATA_OBJ.analysis(xSC);
+					}
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 
@@ -266,16 +282,6 @@ public abstract class StockDataPreprocess <T extends StockMetaData>{
 		
 		
 		
-		// TODO Auto-generated method stub
-		public void analysis(String... stockcodes) {
-			
-			for (String xSC : stockcodes) {
-				if (xSC == null) {
-					continue;
-				}
-			}
-
-		}
 
 
 	}

@@ -3,11 +3,11 @@ package my.data.stock.finStmt;
 
 
 import java.nio.charset.Charset;
-
 import java.util.Date;
 import java.util.HashMap;
-
 import java.util.Map;
+
+
 
 
 
@@ -83,18 +83,34 @@ public class FinancialStatement implements MetaData, Analysis {
 
 	
 	
-
-	//=========================================================================================================
-	//Collection
-	//=========================================================================================================
-	
+	/***************************************************************************
+	 * Collect financial statements data from web and save data into xls files
+	 * 
+	 *************************************************************************/
 	//for multi thread collection 
-	public void collection() throws Exception{
+	public void collect() throws Exception{
 		FinStmtDataObj obj = new FinStmtDataObj();
 		FinancialStatementCollection fsc = new FinancialStatementCollection(obj);
 		fsc.collection();
 	}
 	
+	/***************************************************************************
+	 * Extract data from xls files into xml file for each stock
+	 * @throws Exception 
+	 * 
+	 *************************************************************************/
+	
+	public void extract() throws Exception{
+		FinStmtDataObj obj = new FinStmtDataObj();
+		FinancialStatementExtraction fse = new FinancialStatementExtraction(obj);
+		fse.extact();
+	}
+	
+	
+	/***************************************************************************
+	 * 
+	 * 
+	 *************************************************************************/
 	
 	
 	//=========================================================================================================
@@ -219,100 +235,8 @@ public class FinancialStatement implements MetaData, Analysis {
 	// =========================================================================================================
 	
 	
-	public static void createFinStmtMapFile(boolean needToUpdateMapFile) throws Exception{
-		if (needToUpdateMapFile) {
-			
-			HashMap<String, String[]> finContents = readFinStmtFilesContent(
-					"600036",
-					FinancialStatement._context.get("FinanStmtStoreURI"));
-			
-			String classFileContent = "package my.data.stock.finStmt;\n"
-					+ "import java.util.HashMap;\n"
-					+ "public class FinancialStatementFieldsMap {\n"
-					+ "private final static FinancialStatementFieldsMap instance = new FinancialStatementFieldsMap(); \n"
-					+ "private static boolean initialized = false;	\n"
-					+ "private static HashMap<String,String> FieldsMap; \n"
-					+ "private FinancialStatementFieldsMap(){} \n"
-					+ "public static FinancialStatementFieldsMap getInstance(){ \n"
-					+ "if (initialized) return instance; \n"
-					+ "instance.init(); \n"
-					+ "initialized = true;	\n"
-					+ "return instance;	\n"
-					+ "public static HashMap<String,String> getFieldsMap(){	\n"
-					+ "return FinancialStatementFieldsMap.FieldsMap;	\n"
-					+ "}	\n"
-					+ "private void init(){	\n"
-					+ "if(!initialized){	\n"
-					+ "FinancialStatementFieldsMap.FieldsMap = new HashMap<String,String>(); \n";
-
-			int ii = 0;
-			for (String xFields : finContents.keySet()) {
-				String xkey = "\"" + xFields.trim() + "\"";
-				String xval = "\"f" + (ii++) + "\"";
-				classFileContent += "FinancialStatementFieldsMap.FieldsMap.put("
-						+ xkey + "," + xval + ");\n";
-			}
-
-			classFileContent = classFileContent + "\n}\n}\n}";
-
-			// write into local file system
-			MyFile.WriteStringToFile("FinancialStatementFieldsMapTest.java",
-					classFileContent);
-		}
-	}
 	
 	
-	
-	
-	
-	public static void getAndSaveFinStmtFieldValues(String sc,
-			String localStoreHomeDir) throws Exception {
-		// init fields map file
-		FinancialStatementFieldsMap.getInstance();
-
-		//get fields and their values
-		HashMap<String, String[]> finStmtFieldValues = readFinStmtFilesContent(sc, localStoreHomeDir);
-		 
-		// create root elements
-		org.dom4j.Document doc = org.dom4j.DocumentHelper.createDocument();
-		org.dom4j.Element root = doc.addElement("stock").addAttribute("code",sc);
-
-		String[] dateField = finStmtFieldValues.get("报告日期");
-		int len = dateField.length;
-		for (int i = 0; i < len; i++) {
-			org.dom4j.Element el_datex = root.addElement("rptdate")
-					.addAttribute("date", dateField[i]);
-			for (String xField : finStmtFieldValues.keySet()) {
-				if (xField.equals("报告日期")) {
-					continue;
-				} else {
-					String elementName = FinancialStatementFieldsMap.getFieldsMap().get(xField);
-					String []xfieldVals = finStmtFieldValues.get(xField);
-					String elementVal ="";
-					try{
-						elementVal = getStr(xfieldVals[i]);
-					}catch(java.lang.ArrayIndexOutOfBoundsException outOfBoundEx){
-						elementVal ="--";
-					}
-					
-				
-
-					el_datex.addElement(elementName).addText(elementVal);
-				}
-			}
-		}
-		 
-		 
-		 //write to local file
-		 MyXML.writeToFile(doc, localStoreHomeDir+"/"+sc + "/"+sc+".xml");
-		 
-	     
-	}
-	
-	
-	public static String getStr(String xstr){
-        return (xstr==null) ? "":xstr;
-    }
 	
 	
 	
@@ -335,52 +259,6 @@ public class FinancialStatement implements MetaData, Analysis {
 //	}
 	
 	
-	
-	public static HashMap<String, String[]> readFinStmtFilesContent(String sc,
-			String localStoreHomeDir) throws Exception {
-
-		HashMap<String, String[]> fields = new HashMap<String, String[]>();
-		fields.clear();
-
-		Map<String, String> files = getFinStmtFileList(sc, localStoreHomeDir);
-		for (String xFile : files.keySet()) {
-			if(!xFile.endsWith(".csv")){
-				continue;
-			}
-			String xContent = MyFile.readFileToString(files.get(xFile),
-					Charset.forName(MyContext.Charset));
-			fields = getFieldsValue(xContent, fields);
-		}
-
-		return fields;
-	}
-	
-	
-	
-	public static Map<String,String> getFinStmtFileList(String sc, String localStoreHomeDir) throws Exception{
-		return MyFile.getAllFilesUnderDirectory(localStoreHomeDir+"/"+sc);
-	}
-	
-	
-	
-	public static HashMap<String, String[]> getFieldsValue(String inStr,
-			HashMap<String, String[]> fieldsValues) {
-		String[] str_is_line = inStr.trim().split("\n");
-		for (String xline : str_is_line) {
-			int firstComma = xline.indexOf(",");
-			String fieldName_key = xline.substring(0, firstComma).trim();
-			String fieldValue = xline.substring(firstComma + 1).trim();
-			if (fieldsValues.containsValue(fieldName_key)) {
-				// key is exists
-				continue;
-			} else {
-				// key is not exists
-				fieldsValues.put(fieldName_key, fieldValue.split(","));
-			}
-		}
-
-		return fieldsValues;
-	}
 	
 	
 	

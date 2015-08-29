@@ -24,7 +24,7 @@ public class StockMetaData {
 	
 
 	
-	protected String DEFAULT_STORE_HOME_DIR;
+	protected static String DEFAULT_STORE_HOME_DIR;
 	
 	public static Map<String, Map<String, String>>  COLLECTION_CONTEXT;
 	
@@ -149,12 +149,12 @@ public class StockMetaData {
 	
 	
 	public void setLocalStoreHomeDir() throws Exception{
-		this.DEFAULT_STORE_HOME_DIR = MyContext.DATA_DIR;
+		DEFAULT_STORE_HOME_DIR = MyContext.DATA_DIR;
 	}
 	
 	
 	public String getLocalStoreHomeDir(){
-		return this.DEFAULT_STORE_HOME_DIR;
+		return DEFAULT_STORE_HOME_DIR;
 	}
 	
 	
@@ -168,11 +168,21 @@ public class StockMetaData {
 		return null;
 	}
 
+	
+	
+	
 	// TODO
 	public void collection(String stockcode) throws Exception {
 
 	}
+	
+	
+	public void extract(String stockcode) throws Exception {
+		System.out.println("in StockMetaData extract method");
+	}
 
+	
+	
 	public void analysis(String stockcode) {
 		// TODO Auto-generated method stub
 
@@ -181,7 +191,7 @@ public class StockMetaData {
 	
 	
 	
-	public void saveToLocalFile(String content, String localFilePath){
+	public static void saveToLocalFile(String content, String localFilePath){
 		try {
 			// craete local file if not exists
 			File xStmtFile = MyFile.createFileIfNotExits(localFilePath); 

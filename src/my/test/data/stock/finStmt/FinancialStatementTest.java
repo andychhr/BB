@@ -3,16 +3,29 @@ package my.test.data.stock.finStmt;
 
 import org.junit.Test;
 
+import my.data.stock.finStmt.FinStmtDataObj;
 import my.data.stock.finStmt.FinancialStatement;
+import my.data.stock.finStmt.FinancialStatementExtraction;
 
 public class FinancialStatementTest {
 	
 	
+
+	@Test
+	public void testExtract() throws Exception {
+		FinStmtDataObj obj = new FinStmtDataObj();
+		FinancialStatementExtraction fse = new FinancialStatementExtraction(obj);
+		fse.extact();
+	}
+	
+	
+	/*
 	@Test
 	public void testCreateFinStmtMapFile() throws Exception {
-		FinancialStatement fs = new FinancialStatement();
-		FinancialStatement.createFinStmtMapFile(true);
+		FinStmtDataObj fs = new FinStmtDataObj();
+		FinStmtDataObj.createFinStmtMapFile(false );
 	}
+	*/
 	
 	
 	
@@ -20,8 +33,9 @@ public class FinancialStatementTest {
 	/*
 	@Test
 	public void testFinStmtFieldsVal() throws Exception {
-		FinancialStatement fs = new FinancialStatement();
-		FinancialStatement.getAndSaveFinStmtFieldValues("600036", FinancialStatement._context.get("FinanStmtStoreURI"));
+		FinStmtDataObj obj = new FinStmtDataObj();
+		obj.extract("000001");
+		//FinStmtDataObj.getAndSaveFinStmtFieldValues("000001", FinancialStatement._context.get("FinanStmtStoreURI"));
 		
 	}
 	*/

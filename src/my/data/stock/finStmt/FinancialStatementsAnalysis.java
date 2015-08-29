@@ -1,11 +1,8 @@
 package my.data.stock.finStmt;
 
-public class FinancialStatementsAnalysis implements Runnable {
+import my.data.stock.StockDataPreprocess;
 
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		
-	}
+public class FinancialStatementsAnalysis extends StockDataPreprocess<FinStmtDataObj> {
+
 
 }
