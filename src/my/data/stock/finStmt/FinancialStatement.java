@@ -1,25 +1,19 @@
 package my.data.stock.finStmt;
 
 
-import java.io.File;
-import java.io.IOException;
+
 import java.nio.charset.Charset;
-import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+
 import java.util.Map;
 
-import org.dom4j.Document;
-import org.dom4j.Element;
-import org.dom4j.Node;
-import org.dom4j.io.SAXReader;
+
 
 import my.context.MyContext;
 import my.data.Analysis;
 import my.data.MetaData;
-import my.data.stock.StockMetaData;
 import my.util.file.MyFile;
 import my.util.xml.MyXML;
 
@@ -262,7 +256,7 @@ public class FinancialStatement implements MetaData, Analysis {
 			classFileContent = classFileContent + "\n}\n}\n}";
 
 			// write into local file system
-			MyFile.WriteStringToFile("FinancialStatementFieldsMap.java",
+			MyFile.WriteStringToFile("FinancialStatementFieldsMapTest.java",
 					classFileContent);
 		}
 	}
@@ -314,6 +308,7 @@ public class FinancialStatement implements MetaData, Analysis {
 		 
 	     
 	}
+	
 	
 	public static String getStr(String xstr){
         return (xstr==null) ? "":xstr;

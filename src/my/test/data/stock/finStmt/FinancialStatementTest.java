@@ -1,24 +1,30 @@
 package my.test.data.stock.finStmt;
 
 
-import java.util.HashMap;
-
-import my.context.MyContext;
-import my.data.stock.StockMetaData;
-import my.data.stock.finStmt.FinStmtDataObj;
-import my.data.stock.finStmt.FinancialStatement;
-import my.data.stock.finStmt.FinancialStatementCollection;
-
 import org.junit.Test;
+
+import my.data.stock.finStmt.FinancialStatement;
 
 public class FinancialStatementTest {
 	
+	
+	@Test
+	public void testCreateFinStmtMapFile() throws Exception {
+		FinancialStatement fs = new FinancialStatement();
+		FinancialStatement.createFinStmtMapFile(true);
+	}
+	
+	
+	
+	
+	/*
 	@Test
 	public void testFinStmtFieldsVal() throws Exception {
 		FinancialStatement fs = new FinancialStatement();
 		FinancialStatement.getAndSaveFinStmtFieldValues("600036", FinancialStatement._context.get("FinanStmtStoreURI"));
 		
 	}
+	*/
 
 	/*
 	@Test
