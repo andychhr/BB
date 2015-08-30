@@ -214,7 +214,7 @@ public class MyContext {
 		hmConfigs.put("BalanceStmtURI", MyContext.BalanceStmtURI);
 		hmConfigs.put("IncomeStmtURI", MyContext.IncomeStmtURI);
 		hmConfigs.put("CashFlowStmtURI", MyContext.CashFlowStmtURI);
-		hmConfigs.put("SummayStmtURI", MyContext.SummayStmtURI);
+		hmConfigs.put("SummaryStmtURI", MyContext.SummayStmtURI);
 		hmConfigs.put("KeyIndexStmtURI", MyContext.KeyIndexStmtURI);
 		hmConfigs.put("ProfitStmtURI", MyContext.ProfitStmtURI);
 		hmConfigs.put("PaybackStmtURI", MyContext.PaybackStmtURI);

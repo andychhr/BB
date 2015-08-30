@@ -1,8 +1,19 @@
 package my.data.stock.finStmt;
 
+import java.io.File;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.dom4j.Document;
+import org.dom4j.Element;
+import org.dom4j.Node;
+import org.dom4j.io.SAXReader;
 
 import my.context.MyContext;
 import my.crawler.apache.http.HttpFileCrawler;
@@ -17,7 +28,7 @@ public class FinStmtDataObj extends StockMetaData {
 	
 	private  static String _FinStmt_STORE_HOME_DIR;
 	
-	
+	private static HashMap<String,String> _FIELDS_MAP;
 	
 	
 	
@@ -25,6 +36,9 @@ public class FinStmtDataObj extends StockMetaData {
 	public FinStmtDataObj() throws Exception{
 		super.getInstance();
 		setLocalStoreHomeDir();
+		
+		FinancialStatementFieldsMap.getInstance();
+		_FIELDS_MAP = FinancialStatementFieldsMap.getFieldsMap();
 		
 		//StockMetaData.COLLECTION_CONTEXT = this.getCollectionContext(StockMetaData.STOCK_CODES);
 	}
@@ -111,12 +125,12 @@ public class FinStmtDataObj extends StockMetaData {
 	
 	
 	public void collection(String stockcode) throws Exception {	
+		System.out.println("Started to collect data for stock:"+stockcode);
 
 		Map<String, String> sc_urls_localFiles = null;
 		try {
 			sc_urls_localFiles = getURL_File(stockcode);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -160,7 +174,9 @@ public class FinStmtDataObj extends StockMetaData {
 		FinancialStatementFieldsMap.getInstance();
 
 		//get fields and their values
-		HashMap<String, String[]> finStmtFieldValues = readFinStmtFilesContent(sc, localStoreHomeDir);
+//		HashMap<String, String[]> finStmtFieldValues = new HashMap<String,String[]>();
+//		finStmtFieldValues.clear();
+		HashMap<String, String[]> finStmtFieldValues = readFinStmtFilesContentFromXLS(sc, localStoreHomeDir);
 		 
 		// create root elements
 		org.dom4j.Document doc = org.dom4j.DocumentHelper.createDocument();
@@ -179,6 +195,7 @@ public class FinStmtDataObj extends StockMetaData {
 					if(elementName == null){
 						System.out.println("element name is null");
 					}
+					
 					String []xfieldVals = finStmtFieldValues.get(xField);
 					String elementVal ="";
 					try{
@@ -200,7 +217,8 @@ public class FinStmtDataObj extends StockMetaData {
 		 //write to local file
 		 MyXML.writeToFile(doc, localStoreHomeDir+"/"+sc + "/"+sc+".xml");
 		 
-	     
+	     //clear resource 
+		 finStmtFieldValues = null;
 	}
 	
 	
@@ -210,7 +228,7 @@ public class FinStmtDataObj extends StockMetaData {
 	
 	
 
-	public static HashMap<String, String[]> readFinStmtFilesContent(String sc,
+	public static HashMap<String, String[]> readFinStmtFilesContentFromXLS(String sc,
 			String localStoreHomeDir) throws Exception {
 
 		HashMap<String, String[]> fields = new HashMap<String, String[]>();
@@ -223,7 +241,7 @@ public class FinStmtDataObj extends StockMetaData {
 			}
 			String xContent = MyFile.readFileToString(files.get(xFile),
 					Charset.forName(MyContext.Charset));
-			fields = getFieldsValue(xContent, fields);
+			fields = getFieldsValueFromXLS(xContent, fields);
 		}
 
 		return fields;
@@ -237,14 +255,14 @@ public class FinStmtDataObj extends StockMetaData {
 	
 	
 	
-	public static HashMap<String, String[]> getFieldsValue(String inStr,
+	public static HashMap<String, String[]> getFieldsValueFromXLS(String inStr,
 			HashMap<String, String[]> fieldsValues) {
 		String[] str_is_line = inStr.trim().split("\n");
 		for (String xline : str_is_line) {
 			int firstComma = xline.indexOf(",");
 			String fieldName_key = xline.substring(0, firstComma).trim();
 			String fieldValue = xline.substring(firstComma + 1).trim();
-			if (fieldsValues.containsValue(fieldName_key)) {
+			if (fieldsValues.keySet().contains(fieldName_key)) {
 				// key is exists
 				continue;
 			} else {
@@ -265,21 +283,250 @@ public class FinStmtDataObj extends StockMetaData {
 	/***************************************************************************
 	 * 
 	 * filter stock code
+	
+	 * 
 	 * 
 	 *************************************************************************/
+	
+	public class FinStmtVO{
+		//净资产收益率
+		public double ROE;
+		
+	}
+	
+	public static ArrayList<FinStmtVO> filterStep1_GoodRecords;
+	public static ArrayList<String> filterStep1_LessFilterNumRecords;
+	public static ArrayList<FinStmtVO> filterStep1_badFilterNumRecords;
+	
+	
+	
+	public static void doBasicFilter(){
+		
+		int filter_num = 3;
+		
+		for(String xSC : STOCK_CODES){
+			filterStep1_GoodRecords = new ArrayList<FinStmtVO>();
+			//filterStep1GoodRecords.clear();
+			
+			filterStep1_LessFilterNumRecords = new ArrayList<String>();
+			filterStep1_badFilterNumRecords =  new ArrayList<FinStmtVO>();
+			//
+			filterStep1(xSC, filter_num);
+		}
+	}
+	
+	
+	
+	
+	public static void cleanDate(String sc, String fieldName, ArrayList<String> values, int requiredNum){
+		if(values.size() < requiredNum){
+			synchronized(filterStep1_LessFilterNumRecords){
+				filterStep1_LessFilterNumRecords.add(sc);
+				//set values to null to avoid analysis this stock anymore
+				values = null;
+			}
+		}
+		
+//		for(int i=0;i<requiredNum;i++){
+//			String xStrVal = values.get(i).trim();
+//			if(xStrVal==null){
+//				throw new Exception("stock:"+ sc+ " field :"+fieldName+" is null for Rec#"+i);
+//			}else if(xStrVal.isEmpty() ||xStrVal.equals("--")){
+//				//when i is first element, search forword and find first one record whose value is ok
+//				if(i==0){
+//					for(int k=2; k<requiredNum;k++){
+//						String xTryVal =  values.get(k).trim();
+//						
+//					}
+//				}
+//				
+//			}
+//				xStrVal = "0";
+//			}
+	}
+	
+	
+	
+	//@TODO
+	public static void fillMissingValues(ArrayList<String> values){
+		for(int i=0;i<values.size();i++){
+			String xStrVal = values.get(i).trim();
+			if(xStrVal==null){
+				throw new Exception("value is null for Rec#"+i);
+			}else if(xStrVal.isEmpty() ||xStrVal.equals("--")){
+				//when i is first element, search forword and find first one record whose value is ok
+				if(i==0){
+					for(int k=2; k<values.size();k++){
+						String xTryVal =  values.get(k).trim();
+						
+					}
+				}
+				
+			}
+				xStrVal = "0";
+			}
+	}
+	
+	public static void filterStep1(String sc, int filter_num){
+		//
+		
+		//ROE
+		HashMap<String, String>  values = getFieldValuesFromXML(sc, "净资产收益率");
+		ArrayList<String> yearlyValues = getQnData(values, 4);
+		
+		//
+		if(yearlyValues.size() < filter_num){
+			synchronized(filterStep1_LessFilterNumRecords){
+				filterStep1_LessFilterNumRecords.add(sc);
+			}
+		}
+		
+		for(int i=0;i<filter_num;i++){
+			String xStrVal = yearlyValues.get(i).trim();
+			if(xStrVal==null){
+				throw new Exception("stock:"+ sc+ " field 净资产收益率 is null for Rec#"+i);
+			}else if(xStrVal.isEmpty() ||xStrVal.equals("--")){
+				xStrVal = "0";
+			}
+			
+			
+			FinStmtVO xVO= new FinStmtVO();
+			xVO.ROE  = Double.parseDouble(xStrVal);
+			if(xVO.ROE < 0){
+				synchronized(filterStep1_GoodRecords){
+					filterStep1_badFilterNumRecords.add(xVO);
+				}
+			}else if()
+			
+		}
+		
+	}
+	
+	
+	
+	
+	
 	
 	public static HashMap<String, String> getFinStmtDataXMLFiles(){
 		HashMap<String, String> dataXMLs =  new HashMap<String, String> ();
 		dataXMLs.clear();
 		
 		for(String xSC : STOCK_CODES){
-			dataXMLs.put(xSC, _FinStmt_STORE_HOME_DIR+"/"+xSC+"/"+xSC+"xml");
+			dataXMLs.put(xSC, _FinStmt_STORE_HOME_DIR+"/"+xSC+"/"+xSC+".xml");
 		}
 		
 		return dataXMLs;
 	}
 	
-	public String getFieldValue(){
+	
+	
+	/**
+    *
+    * @param HashMap<String, String>: HashMap<Rerport date, value>
+    * @param Qn: Q1,Q2,Q3,Q4
+    * @return
+    */
+   public static ArrayList<String> getQnData(HashMap<String, String> fieldValues, int Qn){
+       ArrayList<String> vals =  new ArrayList<String>();
+
+       //
+       //int maxLen = dateStr.length > valxStr.length ?  valxStr.length :  dateStr.length;
+       int maxLen = fieldValues.size();
+
+       //
+       String Q4 = "\\d{4}-12-\\d{2}";
+       String Q3 = "\\d{4}-09-\\d{2}";
+       String Q2 = "\\d{4}-06-\\d{2}";
+       String Q1 = "\\d{4}-03-\\d{2}";
+
+       String pat = Q4;
+       switch(Qn){
+           case 1:
+               pat = Q1;
+               break;
+           case 2:
+               pat = Q2;
+               break;
+           case 3:
+               pat = Q3;
+               break;
+           case 4:
+               pat = Q4;
+               break;
+       }
+       
+       //match string by regex
+       Pattern pt = Pattern.compile(pat);
+       for(String xDate : fieldValues.keySet()){
+           String xValue = fieldValues.get(xDate).trim();
+           //
+           Matcher m = pt.matcher(xDate);
+           if(m.find()){
+               vals.add(xValue);
+           }
+       }
+       
+       //return 
+       return vals;
+   }
+
+	
+	
+	
+	public static HashMap<String, String> getFieldValuesFromXML(String sc, String fieldName) throws Exception{
+		//return value
+				HashMap<String, String> date_fieldVal = new HashMap<String, String>();
+				date_fieldVal.clear();
+				
+				
+		//get actual field name from map file
+		String actualFieldName = "";
+		if(FinStmtDataObj._FIELDS_MAP.containsKey(fieldName)){
+			actualFieldName = FinStmtDataObj._FIELDS_MAP.get(fieldName);
+		}else{
+			throw new Exception("FinancialStatementFieldsMap does not contain this fieldName:"+fieldName);
+		}
+		
+		//xml file path
+		String filePath =   _FinStmt_STORE_HOME_DIR+"/"+sc+"/"+sc+".xml";
+		
+		
+		
+		
+		// check input file
+		File xml = MyXML.validateXML(filePath);
+
+		//
+		Document document = null;
+		try {
+			SAXReader saxReader = new SAXReader(); 
+			document = saxReader.read(xml); 
+			List<? extends Node> list = document.selectNodes("//rptdate");
+			Iterator<?> iter = list.iterator();
+			while (iter.hasNext()) {
+				Element dateElement = (Element) iter.next();
+				String rptDate = dateElement.attributeValue("date").trim();
+				
+//				String currentPath = dateElement.getPath();
+//				String xPath = currentPath + "[@date='"+rptDate+"']/"+ actualFieldName;
+//				String xFieldVal = dateElement.selectSingleNode(xPath).getText().trim();
+				Element xElmt = dateElement.element(actualFieldName);
+				String xFieldVal = xElmt.getTextTrim();
+				
+				date_fieldVal.put(rptDate, xFieldVal);
+				
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			document = null;
+		}
+				
+		
+		return date_fieldVal;
+		
+		
+		
 		
 	}
 	
@@ -300,7 +547,7 @@ public class FinStmtDataObj extends StockMetaData {
 	public static void createFinStmtMapFile(boolean needToUpdateMapFile) throws Exception{
 		if (needToUpdateMapFile) {
 			
-			HashMap<String, String[]> finContents = readFinStmtFilesContent(
+			HashMap<String, String[]> finContents = readFinStmtFilesContentFromXLS(
 					"600036",
 					FinancialStatement._context.get("FinanStmtStoreURI"));
 			

@@ -123,7 +123,10 @@ public abstract class StockDataPreprocess <T extends StockMetaData>{
 
 		// resubmit request if any failures
 		if (this._RESUBMIT_RECORDS.size() > 0) {
-				this.preprocess(actionName, (String[])this._RESUBMIT_RECORDS.toArray());
+			Object[] recs = this._RESUBMIT_RECORDS.toArray();
+			String[] resubmitReq = new String[recs.length];
+			System.arraycopy(recs, 0, resubmitReq, 0, recs.length);
+			this.preprocess(actionName, resubmitReq);
 		}
 
 		// clear resource
@@ -158,10 +161,10 @@ public abstract class StockDataPreprocess <T extends StockMetaData>{
 		}
 
 		//
-		int loopTimes = 120;
+		int loopTimes = 60;
 		while (loopTimes > 0) {
 			if (this._threadUnitsSize > 0) {
-				Thread.sleep(1 * 60 * 1000); // every 1 min check once
+				Thread.sleep(1 * 30 * 1000); // every 1 min check once
 				loopTimes--;
 			} else {
 				loopTimes = -1; // exit loop

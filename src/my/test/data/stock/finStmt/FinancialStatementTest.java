@@ -5,18 +5,28 @@ import org.junit.Test;
 
 import my.data.stock.finStmt.FinStmtDataObj;
 import my.data.stock.finStmt.FinancialStatement;
+import my.data.stock.finStmt.FinancialStatementCollection;
 import my.data.stock.finStmt.FinancialStatementExtraction;
 
 public class FinancialStatementTest {
 	
-	
-
+	/*
 	@Test
 	public void testExtract() throws Exception {
 		FinStmtDataObj obj = new FinStmtDataObj();
 		FinancialStatementExtraction fse = new FinancialStatementExtraction(obj);
 		fse.extact();
 	}
+		
+*/
+	@Test
+	public void testGetFieldValues() throws Exception{
+		String sc = "600036";
+		FinStmtDataObj obj = new FinStmtDataObj();
+		obj.getFieldValuesFromXML(sc, "净利润(万元)");
+	}
+
+	
 	
 	
 	/*
@@ -71,7 +81,7 @@ public class FinancialStatementTest {
 	}
 	
 	
-	*/
+*/
 	
 	
 
