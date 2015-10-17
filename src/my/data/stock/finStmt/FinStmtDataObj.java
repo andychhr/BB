@@ -249,6 +249,13 @@ public class FinStmtDataObj extends StockMetaData {
 	
 	
 	
+	/**
+	 * 
+	 * @param sc
+	 * @param localStoreHomeDir
+	 * @return Map<fieldName, fieldValues>
+	 * @throws Exception
+	 */
 	public static Map<String,String> getFinStmtFileList(String sc, String localStoreHomeDir) throws Exception{
 		return MyFile.getAllFilesUnderDirectory(localStoreHomeDir+"/"+sc);
 	}
@@ -278,6 +285,12 @@ public class FinStmtDataObj extends StockMetaData {
 	
 	
 	
+	//======================================================================
+	//======================================================================
+	//======================================================================
+	
+	
+	
 	
 	
 	/***************************************************************************
@@ -288,28 +301,35 @@ public class FinStmtDataObj extends StockMetaData {
 	 * 
 	 *************************************************************************/
 	
-	public class FinStmtVO{
+	class FinStmtVO{
 		//净资产收益率
 		public double ROE;
 		
 	}
 	
+	
+	public 
+	
+	
+	
 	public static ArrayList<FinStmtVO> filterStep1_GoodRecords;
-	public static ArrayList<String> filterStep1_LessFilterNumRecords;
-	public static ArrayList<FinStmtVO> filterStep1_badFilterNumRecords;
+	public static ArrayList<String> filterStep1_lackRecords;	//Records number less then required analysis number
+	public static ArrayList<FinStmtVO> filterStep1_badRecords;
+	
+	
+	public 
 	
 	
 	
-	public static void doBasicFilter(){
-		
-		int filter_num = 3;
+	public static void initBasicFilters(int requiredNum){
 		
 		for(String xSC : STOCK_CODES){
 			filterStep1_GoodRecords = new ArrayList<FinStmtVO>();
 			//filterStep1GoodRecords.clear();
 			
-			filterStep1_LessFilterNumRecords = new ArrayList<String>();
-			filterStep1_badFilterNumRecords =  new ArrayList<FinStmtVO>();
+			filterStep1_lackRecords = new ArrayList<String>();
+			filterStep1_badRecords =  new ArrayList<FinStmtVO>();
+			
 			//
 			filterStep1(xSC, filter_num);
 		}
@@ -320,8 +340,8 @@ public class FinStmtDataObj extends StockMetaData {
 	
 	public static void cleanDate(String sc, String fieldName, ArrayList<String> values, int requiredNum){
 		if(values.size() < requiredNum){
-			synchronized(filterStep1_LessFilterNumRecords){
-				filterStep1_LessFilterNumRecords.add(sc);
+			synchronized(filterStep1_lackRecords){
+				filterStep1_lackRecords.add(sc);
 				//set values to null to avoid analysis this stock anymore
 				values = null;
 			}
@@ -348,7 +368,7 @@ public class FinStmtDataObj extends StockMetaData {
 	
 	
 	//@TODO
-	public static void fillMissingValues(ArrayList<String> values){
+	public static void fillMissingValues(ArrayList<String> values) throws Exception{
 		for(int i=0;i<values.size();i++){
 			String xStrVal = values.get(i).trim();
 			if(xStrVal==null){
@@ -404,7 +424,9 @@ public class FinStmtDataObj extends StockMetaData {
 	
 	
 	
-	
+	//======================================================================
+	//======================================================================
+	//======================================================================
 	
 	
 	public static HashMap<String, String> getFinStmtDataXMLFiles(){
@@ -535,6 +557,9 @@ public class FinStmtDataObj extends StockMetaData {
 	
 	
 	
+	//======================================================================
+	//======================================================================
+	//======================================================================
 	
 	
 
