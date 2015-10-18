@@ -4,6 +4,7 @@ package my.test.data.stock.finStmt;
 import org.junit.Test;
 
 import my.data.stock.finStmt.FinStmtDataObj;
+import my.data.stock.finStmt.FinStmtDataPreprocess;
 import my.data.stock.finStmt.FinancialStatement;
 import my.data.stock.finStmt.FinancialStatementCollection;
 import my.data.stock.finStmt.FinancialStatementExtraction;
@@ -23,7 +24,7 @@ public class FinancialStatementTest {
 	public void testGetFieldValues() throws Exception{
 		String sc = "600036";
 		FinStmtDataObj obj = new FinStmtDataObj();
-		obj.getFieldValuesFromXML(sc, "净利润(万元)");
+		FinStmtDataPreprocess.getFieldValuesFromXML(sc, "净利润(万元)");
 	}
 
 	

@@ -17,6 +17,7 @@ import org.dom4j.io.SAXReader;
 
 import my.context.MyContext;
 import my.crawler.apache.http.HttpFileCrawler;
+import my.data.stock.StockDataPreprocess;
 import my.data.stock.StockMetaData;
 import my.util.file.MyFile;
 import my.util.xml.MyXML;
@@ -26,7 +27,7 @@ public class FinStmtDataObj extends StockMetaData {
 	
 	
 	
-	private  static String _FinStmt_STORE_HOME_DIR;
+	private static String _FinStmt_STORE_HOME_DIR;
 	
 	private static HashMap<String,String> _FIELDS_MAP;
 	
@@ -42,6 +43,16 @@ public class FinStmtDataObj extends StockMetaData {
 		
 		//StockMetaData.COLLECTION_CONTEXT = this.getCollectionContext(StockMetaData.STOCK_CODES);
 	}
+	
+	
+	public static String get_FinStmt_STORE_HOME_DIR(){
+		return FinStmtDataObj._FinStmt_STORE_HOME_DIR;
+	}
+	
+	public static HashMap<String,String>  get_FIELDS_MAP(){
+		return FinStmtDataObj._FIELDS_MAP;
+	}
+	
 	
 	
 //	public Map<String, Map<String, String>> getCollectionContext(String []stockcodes) throws Exception{
@@ -176,7 +187,7 @@ public class FinStmtDataObj extends StockMetaData {
 		//get fields and their values
 //		HashMap<String, String[]> finStmtFieldValues = new HashMap<String,String[]>();
 //		finStmtFieldValues.clear();
-		HashMap<String, String[]> finStmtFieldValues = readFinStmtFilesContentFromXLS(sc, localStoreHomeDir);
+		HashMap<String, String[]> finStmtFieldValues = FinStmtDataPreprocess.readFinStmtFilesContentFromXLS(sc, localStoreHomeDir);
 		 
 		// create root elements
 		org.dom4j.Document doc = org.dom4j.DocumentHelper.createDocument();
@@ -227,59 +238,61 @@ public class FinStmtDataObj extends StockMetaData {
     }
 	
 	
+//
+//	public static HashMap<String, String[]> readFinStmtFilesContentFromXLS(String sc,
+//			String localStoreHomeDir) throws Exception {
+//
+//		HashMap<String, String[]> fields = new HashMap<String, String[]>();
+//		fields.clear();
+//
+//		Map<String, String> files = getFinStmtFileList(sc, localStoreHomeDir);
+//		for (String xFile : files.keySet()) {
+//			if(!xFile.endsWith(".csv")){
+//				continue;
+//			}
+//			String xContent = MyFile.readFileToString(files.get(xFile),
+//					Charset.forName(MyContext.Charset));
+//			fields = getFieldsValueFromXLS(xContent, fields);
+//		}
+//
+//		return fields;
+//	}
+	
+	
+	
+	
+//	/**
+//	 * 
+//	 * @param sc
+//	 * @param localStoreHomeDir
+//	 * @return Map<fieldName, fieldValues>
+//	 * @throws Exception
+//	 */
+//	
+//	public static Map<String,String> getFinStmtFileList(String sc, String localStoreHomeDir) throws Exception{
+//		return MyFile.getAllFilesUnderDirectory(localStoreHomeDir+"/"+sc);
+//	}
 
-	public static HashMap<String, String[]> readFinStmtFilesContentFromXLS(String sc,
-			String localStoreHomeDir) throws Exception {
-
-		HashMap<String, String[]> fields = new HashMap<String, String[]>();
-		fields.clear();
-
-		Map<String, String> files = getFinStmtFileList(sc, localStoreHomeDir);
-		for (String xFile : files.keySet()) {
-			if(!xFile.endsWith(".csv")){
-				continue;
-			}
-			String xContent = MyFile.readFileToString(files.get(xFile),
-					Charset.forName(MyContext.Charset));
-			fields = getFieldsValueFromXLS(xContent, fields);
-		}
-
-		return fields;
-	}
 	
-	
-	
-	/**
-	 * 
-	 * @param sc
-	 * @param localStoreHomeDir
-	 * @return Map<fieldName, fieldValues>
-	 * @throws Exception
-	 */
-	public static Map<String,String> getFinStmtFileList(String sc, String localStoreHomeDir) throws Exception{
-		return MyFile.getAllFilesUnderDirectory(localStoreHomeDir+"/"+sc);
-	}
-	
-	
-	
-	public static HashMap<String, String[]> getFieldsValueFromXLS(String inStr,
-			HashMap<String, String[]> fieldsValues) {
-		String[] str_is_line = inStr.trim().split("\n");
-		for (String xline : str_is_line) {
-			int firstComma = xline.indexOf(",");
-			String fieldName_key = xline.substring(0, firstComma).trim();
-			String fieldValue = xline.substring(firstComma + 1).trim();
-			if (fieldsValues.keySet().contains(fieldName_key)) {
-				// key is exists
-				continue;
-			} else {
-				// key is not exists
-				fieldsValues.put(fieldName_key, fieldValue.split(","));
-			}
-		}
-
-		return fieldsValues;
-	}
+//	
+//	public static HashMap<String, String[]> getFieldsValueFromXLS(String inStr,
+//			HashMap<String, String[]> fieldsValues) {
+//		String[] str_is_line = inStr.trim().split("\n");
+//		for (String xline : str_is_line) {
+//			int firstComma = xline.indexOf(",");
+//			String fieldName_key = xline.substring(0, firstComma).trim();
+//			String fieldValue = xline.substring(firstComma + 1).trim();
+//			if (fieldsValues.keySet().contains(fieldName_key)) {
+//				// key is exists
+//				continue;
+//			} else {
+//				// key is not exists
+//				fieldsValues.put(fieldName_key, fieldValue.split(","));
+//			}
+//		}
+//
+//		return fieldsValues;
+//	}
 	
 	
 	
@@ -300,7 +313,7 @@ public class FinStmtDataObj extends StockMetaData {
 	 * 
 	 * 
 	 *************************************************************************/
-	
+	/*
 	class FinStmtVO{
 		//净资产收益率
 		public double ROE;
@@ -391,8 +404,8 @@ public class FinStmtDataObj extends StockMetaData {
 		//
 		
 		//ROE
-		HashMap<String, String>  values = getFieldValuesFromXML(sc, "净资产收益率");
-		ArrayList<String> yearlyValues = getQnData(values, 4);
+		HashMap<String, String>  values = FinStmtDataPreprocess.getFieldValuesFromXML(sc, "净资产收益率");
+		ArrayList<String> yearlyValues = FinStmtDataPreprocess.getQnData(values, 4);
 		
 		//
 		if(yearlyValues.size() < filter_num){
@@ -422,195 +435,7 @@ public class FinStmtDataObj extends StockMetaData {
 		
 	}
 	
-	
-	
-	//======================================================================
-	//======================================================================
-	//======================================================================
-	
-	
-	public static HashMap<String, String> getFinStmtDataXMLFiles(){
-		HashMap<String, String> dataXMLs =  new HashMap<String, String> ();
-		dataXMLs.clear();
-		
-		for(String xSC : STOCK_CODES){
-			dataXMLs.put(xSC, _FinStmt_STORE_HOME_DIR+"/"+xSC+"/"+xSC+".xml");
-		}
-		
-		return dataXMLs;
-	}
-	
-	
-	
-	/**
-    *
-    * @param HashMap<String, String>: HashMap<Rerport date, value>
-    * @param Qn: Q1,Q2,Q3,Q4
-    * @return
-    */
-   public static ArrayList<String> getQnData(HashMap<String, String> fieldValues, int Qn){
-       ArrayList<String> vals =  new ArrayList<String>();
-
-       //
-       //int maxLen = dateStr.length > valxStr.length ?  valxStr.length :  dateStr.length;
-       int maxLen = fieldValues.size();
-
-       //
-       String Q4 = "\\d{4}-12-\\d{2}";
-       String Q3 = "\\d{4}-09-\\d{2}";
-       String Q2 = "\\d{4}-06-\\d{2}";
-       String Q1 = "\\d{4}-03-\\d{2}";
-
-       String pat = Q4;
-       switch(Qn){
-           case 1:
-               pat = Q1;
-               break;
-           case 2:
-               pat = Q2;
-               break;
-           case 3:
-               pat = Q3;
-               break;
-           case 4:
-               pat = Q4;
-               break;
-       }
-       
-       //match string by regex
-       Pattern pt = Pattern.compile(pat);
-       for(String xDate : fieldValues.keySet()){
-           String xValue = fieldValues.get(xDate).trim();
-           //
-           Matcher m = pt.matcher(xDate);
-           if(m.find()){
-               vals.add(xValue);
-           }
-       }
-       
-       //return 
-       return vals;
-   }
-
-	
-	
-	
-	public static HashMap<String, String> getFieldValuesFromXML(String sc, String fieldName) throws Exception{
-		//return value
-				HashMap<String, String> date_fieldVal = new HashMap<String, String>();
-				date_fieldVal.clear();
-				
-				
-		//get actual field name from map file
-		String actualFieldName = "";
-		if(FinStmtDataObj._FIELDS_MAP.containsKey(fieldName)){
-			actualFieldName = FinStmtDataObj._FIELDS_MAP.get(fieldName);
-		}else{
-			throw new Exception("FinancialStatementFieldsMap does not contain this fieldName:"+fieldName);
-		}
-		
-		//xml file path
-		String filePath =   _FinStmt_STORE_HOME_DIR+"/"+sc+"/"+sc+".xml";
-		
-		
-		
-		
-		// check input file
-		File xml = MyXML.validateXML(filePath);
-
-		//
-		Document document = null;
-		try {
-			SAXReader saxReader = new SAXReader(); 
-			document = saxReader.read(xml); 
-			List<? extends Node> list = document.selectNodes("//rptdate");
-			Iterator<?> iter = list.iterator();
-			while (iter.hasNext()) {
-				Element dateElement = (Element) iter.next();
-				String rptDate = dateElement.attributeValue("date").trim();
-				
-//				String currentPath = dateElement.getPath();
-//				String xPath = currentPath + "[@date='"+rptDate+"']/"+ actualFieldName;
-//				String xFieldVal = dateElement.selectSingleNode(xPath).getText().trim();
-				Element xElmt = dateElement.element(actualFieldName);
-				String xFieldVal = xElmt.getTextTrim();
-				
-				date_fieldVal.put(rptDate, xFieldVal);
-				
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		} finally {
-			document = null;
-		}
-				
-		
-		return date_fieldVal;
-		
-		
-		
-		
-	}
-	
-	
-	
-	
-	
-	
-	//======================================================================
-	//======================================================================
-	//======================================================================
-	
-	
-
-	/***************************************************************************
-	 * 
-	 * 
-	 *************************************************************************/
-	
-
-	public static void createFinStmtMapFile(boolean needToUpdateMapFile) throws Exception{
-		if (needToUpdateMapFile) {
-			
-			HashMap<String, String[]> finContents = readFinStmtFilesContentFromXLS(
-					"600036",
-					FinancialStatement._context.get("FinanStmtStoreURI"));
-			
-			String classFileContent = "package my.data.stock.finStmt;\n"
-					+ "import java.util.HashMap;\n"
-					+ "public class FinancialStatementFieldsMap {\n"
-					+ "private final static FinancialStatementFieldsMap instance = new FinancialStatementFieldsMap(); \n"
-					+ "private static boolean initialized = false;	\n"
-					+ "private static HashMap<String,String> FieldsMap; \n"
-					+ "private FinancialStatementFieldsMap(){} \n"
-					+ "public static FinancialStatementFieldsMap getInstance(){ \n"
-					+ "if (initialized) return instance; \n"
-					+ "instance.init(); \n"
-					+ "initialized = true;	\n"
-					+ "return instance;	\n"
-					+ "}	\n"
-					+ "public static HashMap<String,String> getFieldsMap(){	\n"
-					+ "return FinancialStatementFieldsMap.FieldsMap;	\n"
-					+ "}	\n"
-					+ "private void init(){	\n"
-					+ "if(!initialized){	\n"
-					+ "FinancialStatementFieldsMap.FieldsMap = new HashMap<String,String>(); \n";
-
-			int ii = 0;
-			for (String xFields : finContents.keySet()) {
-				String xkey = "\"" + xFields.trim() + "\"";
-				String xval = "\"f" + (ii++) + "\"";
-				classFileContent += "FinancialStatementFieldsMap.FieldsMap.put("
-						+ xkey + "," + xval + ");\n";
-			}
-
-			classFileContent = classFileContent + "\n}\n}\n}";
-
-			// write into local file system
-			MyFile.WriteStringToFile("src/my/data/stock/finStmt/FinancialStatementFieldsMap.java",
-					classFileContent);
-		}
-	}
+	*/
 	
 	
 	
