@@ -1,25 +1,17 @@
 package my.data.stock.finStmt;
 
-import java.io.File;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.dom4j.Document;
-import org.dom4j.Element;
-import org.dom4j.Node;
-import org.dom4j.io.SAXReader;
+import java.util.HashMap;
+
+import java.util.Map;
+import java.util.TreeMap;
+
 
 import my.context.MyContext;
 import my.crawler.apache.http.HttpFileCrawler;
-import my.data.stock.StockDataPreprocess;
+
 import my.data.stock.StockMetaData;
-import my.util.file.MyFile;
+
 import my.util.xml.MyXML;
 
 
@@ -187,7 +179,7 @@ public class FinStmtDataObj extends StockMetaData {
 		//get fields and their values
 //		HashMap<String, String[]> finStmtFieldValues = new HashMap<String,String[]>();
 //		finStmtFieldValues.clear();
-		HashMap<String, String[]> finStmtFieldValues = FinStmtDataPreprocess.readFinStmtFilesContentFromXLS(sc, localStoreHomeDir);
+		TreeMap<String, String[]> finStmtFieldValues = FinStmtDataPreprocess.readFinStmtFilesContentFromXLS(sc, localStoreHomeDir);
 		 
 		// create root elements
 		org.dom4j.Document doc = org.dom4j.DocumentHelper.createDocument();
