@@ -275,6 +275,12 @@ public class FinancialStatement implements MetaData, Analysis {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void collection() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 

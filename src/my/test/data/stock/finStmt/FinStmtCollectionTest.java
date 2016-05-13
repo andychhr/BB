@@ -35,7 +35,14 @@ public class FinStmtCollectionTest {
 //		String[] scs = FinStmtDataObj.getStockCodes();
 //		HashMap<String,String> scContext = FinStmtDataObj.getStockContext(); 
 		FinancialStatementCollection fsc = new FinancialStatementCollection(obj);
+		
+		
+		//collection
 		fsc.collection();
+
+		//extract
+		fsc.extract();
+		//obj.extract(stockcode);
 		
 	}
 	

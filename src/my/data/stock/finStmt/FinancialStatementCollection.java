@@ -20,5 +20,14 @@ public class FinancialStatementCollection extends StockDataPreprocess<FinStmtDat
 		}
 	}
 	
+	
+	public void extract(){
+		try {
+			this.preprocess("extract");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 
 }
